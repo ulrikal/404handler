@@ -11,6 +11,7 @@ using EPiServer.Logging;
 using EPiServer.Framework.Localization;
 using EPiServer.Security;
 using EPiServer.Shell.Gadgets;
+using log4net;
 
 namespace BVNetwork.NotFound.Controllers
 {
@@ -23,7 +24,7 @@ namespace BVNetwork.NotFound.Controllers
     public class NotFoundRedirectController : Controller
     {
 
-        private static readonly ILogger Logger = LogManager.GetLogger();
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(NotFoundRedirectController));
         private void CheckAccess()
         {
             if (!PrincipalInfo.HasEditAccess)
@@ -107,7 +108,7 @@ namespace BVNetwork.NotFound.Controllers
         public void SaveRedirect(string oldUrl, string newUrl, string skipWildCardAppend)
         {
 
-            Logger.Debug("Adding redirect: '{0}' -> '{1}'", oldUrl, newUrl);
+            Logger.DebugFormat("Adding redirect: '{0}' -> '{1}'", oldUrl, newUrl);
             // Get hold of the datastore
             DataStoreHandler dsHandler = new DataStoreHandler();
             dsHandler.SaveCustomRedirect(new CustomRedirect(oldUrl.Trim(), newUrl.Trim(), skipWildCardAppend == null ? false : true));
@@ -143,7 +144,7 @@ namespace BVNetwork.NotFound.Controllers
         {
             CheckAccess();
 
-            Logger.Debug("Deleting redirect: '{0}'", oldUrl);
+            Logger.DebugFormat("Deleting redirect: '{0}'", oldUrl);
             
             DataStoreHandler dsHandler = new DataStoreHandler();
             dsHandler.DeleteCustomRedirect(oldUrl);

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using EPiServer.Logging;
+
 
 namespace BVNetwork.NotFound.Core.Data
 {
@@ -21,7 +22,8 @@ namespace BVNetwork.NotFound.Core.Data
         }
         private const string REDIRECTSTABLE = "[dbo].[BVN.NotFoundRequests]";
 
-        private static readonly ILogger Logger = LogManager.GetLogger();
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(DataAccessBaseEx));
+        
 
         public DataSet ExecuteSQL(string sqlCommand, List<IDbDataParameter> parameters)
         {
@@ -160,7 +162,7 @@ namespace BVNetwork.NotFound.Core.Data
         }
         catch (SqlException)
         {
-            Logger.Information("Stored procedure not found. Creating it.");
+            Logger.Info("Stored procedure not found. Creating it.");
             return version;
         }
         catch (Exception ex)

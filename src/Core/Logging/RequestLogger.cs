@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BVNetwork.NotFound.Core.Data;
 using EPiServer.Logging;
+using log4net;
 
 namespace BVNetwork.NotFound.Core.Logging
 {
@@ -32,7 +33,7 @@ namespace BVNetwork.NotFound.Core.Logging
 
             LogQueue = new List<LogEvent>();
         }
-        private static readonly ILogger Logger = LogManager.GetLogger();
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(RequestLogger));
 
         public void LogRequest(string oldUrl, string referrer)
         {
@@ -76,7 +77,7 @@ namespace BVNetwork.NotFound.Core.Logging
                 Logger.Debug(string.Format("{0} 404 request(s) has been stored to the database.", bufferSize));
             }
             else
-                Logger.Warning("404 requests have been made too frequents (exceeded the threshold). Requests not logged to database.");
+                Logger.WarnFormat("404 requests have been made too frequents (exceeded the threshold). Requests not logged to database.");
 
         }
         private List<LogEvent> LogQueue { get; set; }

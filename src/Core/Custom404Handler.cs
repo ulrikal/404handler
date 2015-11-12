@@ -13,6 +13,7 @@ using BVNetwork.NotFound.Core.Logging;
 using EPiServer.Core;
 using EPiServer.Web;
 using IPAddress = System.Net.IPAddress;
+using log4net;
 
 namespace BVNetwork.NotFound.Core
 {
@@ -22,7 +23,7 @@ namespace BVNetwork.NotFound.Core
 
         private static readonly List<string> _ignoredResourceExtensions = new List<string> { "jpg", "gif", "png", "css", "js", "ico", "swf", "woff" };
 
-        private static readonly ILogger Logger = LogManager.GetLogger();
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(Custom404Handler));
 
         public static bool HandleRequest(string referer, Uri urlNotFound, out string newUrl)
         {
@@ -153,8 +154,8 @@ namespace BVNetwork.NotFound.Core
                     if (innerEx is PageNotFoundException)
                     {
                         // Should be a normal 404 handler
-                        Logger.Information("404 PageNotFoundException - Url: {0}", notFoundUri.ToString());
-                        Logger.Debug("404 PageNotFoundException - Exception: {0}", innerEx.ToString());
+                        Logger.InfoFormat("404 PageNotFoundException - Url: {0}", notFoundUri.ToString());
+                        Logger.DebugFormat("404 PageNotFoundException - Exception: {0}", innerEx.ToString());
 
                         // Redirect to page, handling this as a normal 404 error
                         return true;
@@ -164,8 +165,8 @@ namespace BVNetwork.NotFound.Core
                     // be found. We'll handle this as a standard 404 error
                     if (innerEx is FileNotFoundException)
                     {
-                        Logger.Information("404 FileNotFoundException - Url: {0}", notFoundUri.ToString());
-                        Logger.Debug("404 FileNotFoundException - Exception: {0}", innerEx.ToString());
+                        Logger.InfoFormat("404 FileNotFoundException - Url: {0}", notFoundUri.ToString());
+                        Logger.DebugFormat("404 FileNotFoundException - Exception: {0}", innerEx.ToString());
                         // Redirect to page, handling this as a normal 404 error
                         return true;
                     }
@@ -179,8 +180,8 @@ namespace BVNetwork.NotFound.Core
                     {
                         if (httpEx.GetHttpCode() == 404)
                         {
-                            Logger.Information("404 HttpException - Url: {0}", notFoundUri.ToString());
-                            Logger.Debug("404 HttpException - Exception: {0}", httpEx.ToString());
+                            Logger.InfoFormat("404 HttpException - Url: {0}", notFoundUri.ToString());
+                            Logger.DebugFormat("404 HttpException - Exception: {0}", httpEx.ToString());
                             return true;
                         }
                     }
@@ -210,7 +211,7 @@ namespace BVNetwork.NotFound.Core
                 if (_ignoredResourceExtensions.Contains(extension))
                 {
                     // Ignoring 404 rewrite of known resource extension
-                    Logger.Debug("Ignoring rewrite of '{0}'. '{1}' is a known resource extension", notFoundUri.ToString(),extension);
+                    Logger.DebugFormat("Ignoring rewrite of '{0}'. '{1}' is a known resource extension", notFoundUri.ToString(),extension);
                     return true;
                 }
             }
@@ -229,7 +230,7 @@ namespace BVNetwork.NotFound.Core
 
             if (string.Compare(requestUrl, fnfPageUrl, StringComparison.InvariantCultureIgnoreCase) == 0)
             {
-                Logger.Information("404 Handler detected an infinite loop to 404 page. Exiting");
+                Logger.Info("404 Handler detected an infinite loop to 404 page. Exiting");
                 return true;
             }
             return false;

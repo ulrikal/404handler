@@ -1,7 +1,7 @@
 using System;
 using BVNetwork.NotFound.Core.Data;
 using BVNetwork.NotFound.Core.Upgrade;
-using EPiServer.Logging;
+using log4net;
 
 namespace BVNetwork.NotFound.Core.CustomRedirects
 {
@@ -10,8 +10,8 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
     /// to ensure performance. 
     /// </summary>
     public class CustomRedirectHandler
-    {
-        private static readonly ILogger Logger = LogManager.GetLogger();
+    {        
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(CustomRedirectHandler));
         private const string CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE = "BvnCustomRedirectHandler";
         private CustomRedirectCollection _customRedirects = null;
 

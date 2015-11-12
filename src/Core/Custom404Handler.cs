@@ -82,7 +82,7 @@ namespace BVNetwork.NotFound.Core
             var context = HttpContext.Current;
             if (context == null)
             {
-                Logger.Debug("No HTTPContext, returning");               
+                Logger.DebugFormat("No HTTPContext, returning");
             }
             return context;
         }
@@ -107,25 +107,20 @@ namespace BVNetwork.NotFound.Core
                 bool localHost = IsLocalhost();
                 if (localHost)
                 {
-                    Logger.Debug("Determined to be localhost, returning");
+                    Logger.DebugFormat("Determined to be localhost, returning");
                     return;
                 }
-                Logger.Debug("Not localhost, handling error");
+                Logger.DebugFormat("Not localhost, handling error");
             }
 
-            Logger.Debug("FileNotFoundHandler called");
+            Logger.DebugFormat("FileNotFoundHandler called");
 
-           
             Uri notFoundUri = context.Request.Url;
 
             // Skip resource files
             if (IsResourceFile(notFoundUri))
                 return;
 
-            // not a server exception. Handle standard 404 error
-            if (context.Response.StatusCode != 404 && !CheckForException(context, notFoundUri))
-                return;
-               
             string query = context.Request.ServerVariables["QUERY_STRING"];
 
             // avoid duplicate log entries
@@ -178,16 +173,14 @@ namespace BVNetwork.NotFound.Core
             try
             {
                 var exception = context.Server.GetLastError();
-                Exception innerEx = exception?.GetBaseException();
-                if (innerEx != null)
+                if (exception != null)
                 {
+                    Exception innerEx = exception.GetBaseException();
                     if (innerEx is PageNotFoundException)
                     {
                         // Should be a normal 404 handler
                         Logger.InfoFormat("404 PageNotFoundException - Url: {0}", notFoundUri.ToString());
                         Logger.DebugFormat("404 PageNotFoundException - Exception: {0}", innerEx.ToString());
-
-                        // Redirect to page, handling this as a normal 404 error
                         return true;
                     }
 
@@ -197,7 +190,6 @@ namespace BVNetwork.NotFound.Core
                     {
                         Logger.InfoFormat("404 FileNotFoundException - Url: {0}", notFoundUri.ToString());
                         Logger.DebugFormat("404 FileNotFoundException - Exception: {0}", innerEx.ToString());
-                        // Redirect to page, handling this as a normal 404 error
                         return true;
                     }
 
@@ -219,7 +211,7 @@ namespace BVNetwork.NotFound.Core
             }
             catch (Exception ex)
             {
-                Logger.Debug("Unable to fetch 404 exception.", ex);
+                Logger.DebugFormat("Unable to fetch 404 exception.", ex);
             }
             return false;
         }
@@ -241,7 +233,7 @@ namespace BVNetwork.NotFound.Core
                 if (_ignoredResourceExtensions.Contains(extension))
                 {
                     // Ignoring 404 rewrite of known resource extension
-                    Logger.DebugFormat("Ignoring rewrite of '{0}'. '{1}' is a known resource extension", notFoundUri.ToString(),extension);
+                    Logger.DebugFormat("Ignoring rewrite of '{0}'. '{1}' is a known resource extension", notFoundUri.ToString(), extension);
                     return true;
                 }
             }
@@ -260,7 +252,7 @@ namespace BVNetwork.NotFound.Core
 
             if (string.Compare(requestUrl, fnfPageUrl, StringComparison.InvariantCultureIgnoreCase) == 0)
             {
-                Logger.Info("404 Handler detected an infinite loop to 404 page. Exiting");
+                Logger.InfoFormat("404 Handler detected an infinite loop to 404 page. Exiting");
                 return true;
             }
             return false;

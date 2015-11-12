@@ -13,4 +13,13 @@
  	 	     -->
     </providers>
   </bvn404Handler>
+  <episerver.shell>
+    <publicModules>
+      <add name="BVNetwork.404Handler" xdt:Locator="Match(name)" xdt:Transform="InsertIfMissing">
+        <assemblies>
+          <add assembly="BVNetwork.EPi404" />
+        </assemblies>
+      </add>
+    </publicModules>
+  </episerver.shell>
 </configuration>

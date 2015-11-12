@@ -63,10 +63,41 @@ namespace BVNetwork.NotFound.Core
             return false;
         }
 
+        public static void FileNotFoundExceptionHandler(object sender, EventArgs e)
+        {
+            HttpContext context = GetContext();
+            if (context == null)
+                return;
+            if (CheckForException(context, context.Request.Url))
+            {
+                context.Response.Clear();
+                context.Response.TrySkipIisCustomErrors = true;
+                context.Server.ClearError();
+                context.Response.StatusCode = 404;
+            }
+        }
+
+        private static HttpContext GetContext()
+        {
+            var context = HttpContext.Current;
+            if (context == null)
+            {
+                Logger.Debug("No HTTPContext, returning");               
+            }
+            return context;
+        }
+
         public static void FileNotFoundHandler(object sender, EventArgs evt)
         {
             // Check if this should be enabled
             if (Configuration.Configuration.FileNotFoundHandlerMode == FileNotFoundMode.Off)
+                return;
+
+            HttpContext context = GetContext();
+            if (context == null)
+                return;
+
+            if (context.Response.StatusCode != 404)
                 return;
 
             // If we're only doing this for remote users, we need to test for local host
@@ -84,13 +115,7 @@ namespace BVNetwork.NotFound.Core
 
             Logger.Debug("FileNotFoundHandler called");
 
-            HttpContext context = HttpContext.Current;
-            if (context == null)
-            {
-                Logger.Debug("No HTTPContext, returning");
-                return;
-            }
-
+           
             Uri notFoundUri = context.Request.Url;
 
             // Skip resource files
@@ -116,7 +141,11 @@ namespace BVNetwork.NotFound.Core
             string newUrl;
             if (HandleRequest(GetReferer(context.Request.UrlReferrer), notFoundUri, out newUrl))
             {
+                context.Response.Clear();
+                context.Response.TrySkipIisCustomErrors = true;
+                context.Server.ClearError();
                 context.Response.RedirectPermanent(newUrl);
+                context.Response.End();
             }
             else
             {
@@ -140,6 +169,7 @@ namespace BVNetwork.NotFound.Core
                 // return the original status code to the client
                 // (this won't work in integrated pipleline mode)
                 context.Response.StatusCode = 404;
+                context.Response.End();
             }
         }
 

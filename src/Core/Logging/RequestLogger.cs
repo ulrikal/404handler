@@ -34,7 +34,7 @@ namespace BVNetwork.NotFound.Core.Logging
         }
         private static readonly ILogger Logger = LogManager.GetLogger();
 
-        public void LogRequest(string oldUrl, string referrer)
+        public void LogRequest(string oldUrl, string referrer, int siteId)
         {
             int bufferSize = Configuration.Configuration.BufferSize;     
             if (LogQueue.Count >= bufferSize)
@@ -49,12 +49,12 @@ namespace BVNetwork.NotFound.Core.Logging
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error("An error occured whil trying to log 404 errors. ", ex);
+                        Logger.Error("An error occured while trying to log 404 errors. ", ex);
                         LogQueue = new List<LogEvent>();
                     }
                 }
             }
-            LogQueue.Add(new LogEvent(oldUrl, DateTime.Now, referrer));
+            LogQueue.Add(new LogEvent(oldUrl, DateTime.Now, referrer, siteId));
         }
 
         private void LogRequests(List<LogEvent> logEvents)
@@ -71,7 +71,7 @@ namespace BVNetwork.NotFound.Core.Logging
                 var dba = DataAccessBaseEx.GetWorker();
                 foreach (LogEvent logEvent in logEvents)
                 {
-                    dba.LogRequestToDb(logEvent.OldUrl, logEvent.Referer, logEvent.Requested);
+                    dba.LogRequestToDb(logEvent.OldUrl, logEvent.Referer, logEvent.Requested, logEvent.SiteId);
                 }
                 Logger.Debug(string.Format("{0} 404 request(s) has been stored to the database.", bufferSize));
             }

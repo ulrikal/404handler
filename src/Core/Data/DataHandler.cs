@@ -8,12 +8,12 @@ namespace BVNetwork.NotFound.Core.Data
     {
         public static string UknownReferer = "Uknown referers";
 
-        public static Dictionary<string, int> GetRedirects()
+        public static Dictionary<string, int> GetRedirects(int siteId)
         {
             var keyCounts = new Dictionary<string, int>();
-            var keyList = new List<string>();
+            new List<string>();
             DataAccessBaseEx dabe = DataAccessBaseEx.GetWorker();
-            var allkeys = dabe.GetAllClientRequestCount();
+            var allkeys = dabe.GetAllClientRequestCount(siteId);
 
             string oldUrl;
             foreach (DataTable table in allkeys.Tables)
@@ -31,10 +31,10 @@ namespace BVNetwork.NotFound.Core.Data
 
         }
 
-        public static Dictionary<string, int> GetReferers(string url)
+        public static Dictionary<string, int> GetReferers(string url, int siteId)
         {
             var dataAccess = DataAccessBaseEx.GetWorker();
-            var referersDs = dataAccess.GetRequestReferers(url);
+            var referersDs = dataAccess.GetRequestReferers(url, siteId);
 
             Dictionary<string, int> referers = new Dictionary<string, int>();
             if (referersDs.Tables[0] != null)
@@ -62,16 +62,34 @@ namespace BVNetwork.NotFound.Core.Data
             return referers;
         }
 
-        public static int GetTotalSuggestionCount()
+        public static int GetTotalSuggestionCount(int siteId)
         {
             var dataAccess = DataAccessBaseEx.GetWorker();
-            var totalSuggestionCountDs = dataAccess.GetTotalNumberOfSuggestions();
-            if (totalSuggestionCountDs != null && totalSuggestionCountDs.Tables != null && totalSuggestionCountDs.Tables.Count > 0)
+            var totalSuggestionCountDs = dataAccess.GetTotalNumberOfSuggestions(siteId);
+            if (totalSuggestionCountDs != null && totalSuggestionCountDs.Tables.Count > 0)
+            {
                 return Convert.ToInt32(totalSuggestionCountDs.Tables[0].Rows[0][0]);
-            else
-                return 0;
+            }
+            return 0;
+        }
 
+        public static int GetSiteIdFromUrl(string url)
+        {
+            string[] urlHostArray = url.Split('/');
+            string urlHost = (string) urlHostArray.GetValue(urlHostArray.Length - 2);
 
+            var dataAccess = DataAccessBaseEx.GetWorker();
+            var hostDataSet = dataAccess.FindSiteIdByHost(urlHost);
+
+            foreach (DataTable table in hostDataSet.Tables)
+            {
+                if (table.Rows.Count > 0)
+                {
+                    var row = table.Rows[0];
+                    return Convert.ToInt32(row[1]);
+                }
+            }
+            return -1;
         }
 
 

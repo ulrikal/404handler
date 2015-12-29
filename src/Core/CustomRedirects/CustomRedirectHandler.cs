@@ -12,8 +12,9 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
     public class CustomRedirectHandler
     {
         private static readonly ILogger Logger = LogManager.GetLogger();
-        private const string CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE = "BvnCustomRedirectHandler";
-        private CustomRedirectCollection _customRedirects = null;
+        // ReSharper disable once InconsistentNaming
+        private const string CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE = "BvnCustomMultiSiteRedirectHandler";
+        private CustomRedirectCollection _customRedirects;
 
         #region constructors...
         // Should only be instanciated by the static Current method
@@ -73,8 +74,7 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
                 Logger.Debug("Begin: Get Current CustomRedirectHandler");
                 // First check if there is a cached version of
                 // this object
-                CustomRedirectHandler handler = null;
-                handler = GetHandlerFromCache();
+                var handler = GetHandlerFromCache();
                 if (handler != null)
                 {
                     Logger.Debug("Returning cached handler.");
@@ -89,9 +89,6 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
                 Logger.Debug("Begin: Load custom redirects from dynamic data store");
                 try
                 {
-
-
-
                     handler.LoadCustomRedirects();
                 }
                 catch (Exception ex)
@@ -124,8 +121,7 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
         /// <returns>An instanciated CustomRedirectHandler if found in the cache, null if not found</returns>
         private static CustomRedirectHandler GetHandlerFromCache()
         {
-            CustomRedirectHandler handler = null;
-            handler = EPiServer.CacheManager.Get(CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE) as CustomRedirectHandler;
+            var handler = EPiServer.CacheManager.Get(CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE) as CustomRedirectHandler;
             return handler;
         }
 

@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Threading;
 using BVNetwork.NotFound.Core.CustomRedirects;
 using EPiServer.Events;
 using EPiServer.Events.Clients;
 using EPiServer.Logging;
+using EPiServer.PlugIn;
 
 namespace BVNetwork.NotFound.Core.Data
 {
 
-    public class DataStoreEventHandlerHook : EPiServer.PlugIn.PlugInAttribute
+    public class DataStoreEventHandlerHook : PlugInAttribute
     {
         private static readonly ILogger _log = LogManager.GetLogger(typeof(DataStoreEventHandlerHook));
-        private static readonly Guid _dataStoreUpdateEventId = new Guid("{26A1CA35-1CBD-44a7-8243-5E80D79F3F26}");
-        private static readonly Guid _dataStoreUpdateRaiserId = new Guid("{6180555A-7A0E-4485-B1B1-44BF6E4D4A0D}");
+        private static readonly Guid DataStoreUpdateEventId = new Guid("{96FE2985-D4C6-4879-85B5-DCAC7DA89713}");
+        private static readonly Guid DataStoreUpdateRaiserId = new Guid("{832C2FA6-153D-4281-91A6-384457202708}");
 
         public static void Start()
         {
@@ -26,10 +28,10 @@ namespace BVNetwork.NotFound.Core.Data
                         AppDomain.CurrentDomain.Id.ToString(),
                         AppDomain.CurrentDomain.FriendlyName,
                         AppDomain.CurrentDomain.BaseDirectory,
-                        System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+                        Thread.CurrentThread.ManagedThreadId.ToString());
                     // Listen to events
-                    Event dataStoreInvalidationEvent = Event.Get(_dataStoreUpdateEventId);
-                    dataStoreInvalidationEvent.Raised += new EventNotificationHandler(dataStoreInvalidationEvent_Raised);
+                    Event dataStoreInvalidationEvent = Event.Get(DataStoreUpdateEventId);
+                    dataStoreInvalidationEvent.Raised += dataStoreInvalidationEvent_Raised;
 
                     _log.Debug("End: Initializing Data Store Invalidation Handler on '{0}'", Environment.MachineName);
 
@@ -55,9 +57,9 @@ namespace BVNetwork.NotFound.Core.Data
         public static void DataStoreUpdated()
         {
             // File is changing, notify the other servers
-            Event dataStoreInvalidateEvent = EPiServer.Events.Clients.Event.Get(_dataStoreUpdateEventId);
+            Event dataStoreInvalidateEvent = Event.Get(DataStoreUpdateEventId);
             // Raise event
-            dataStoreInvalidateEvent.Raise(_dataStoreUpdateRaiserId, null);
+            dataStoreInvalidateEvent.Raise(DataStoreUpdateRaiserId, null);
 
         }
 

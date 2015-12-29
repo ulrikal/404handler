@@ -24,12 +24,22 @@ namespace BVNetwork.NotFound.Core
 
         public static bool HandleRequest(string referer, Uri urlNotFound, out CustomRedirect foundRedirect)
         {
-            // Try to match the requested url my matching it
+            string pathAndQuery = urlNotFound.PathAndQuery;
+            int siteId = FindSiteId(urlNotFound.Host);
+            foundRedirect = null;
+
+            if (siteId == -1)
+            {
+                //TODO då är det nåt fel, logga och så
+                return false;
+            }
+
+            // Try to match the requested url by matching it
             // to the static list of custom redirects
             CustomRedirectHandler fnfHandler = CustomRedirectHandler.Current;
             CustomRedirect redirect = fnfHandler.CustomRedirects.Find(urlNotFound);
-            string pathAndQuery = urlNotFound.PathAndQuery;
-            foundRedirect = null;
+            
+            
             if (redirect == null)
             {
                 redirect = fnfHandler.CustomRedirects.FindInProviders(urlNotFound.AbsoluteUri);
@@ -62,10 +72,15 @@ namespace BVNetwork.NotFound.Core
                 if (Configuration.Configuration.Logging == LoggerMode.On)
                 {
                     // Safe logging
-                    RequestLogger.Instance.LogRequest(pathAndQuery, referer);
+                    RequestLogger.Instance.LogRequest(pathAndQuery, referer, siteId);
                 }
             }
             return false;
+        }
+
+        private static int FindSiteId(string urlHost)
+        {
+            return DataHandler.GetSiteIdFromUrl(urlHost);
         }
 
         public static void FileNotFoundExceptionHandler(object sender, EventArgs e)

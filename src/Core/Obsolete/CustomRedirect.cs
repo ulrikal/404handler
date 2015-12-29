@@ -11,6 +11,7 @@ namespace BVNetwork.FileNotFound.CustomRedirects
     {
         private string _oldUrl;
         private string _newUrl;
+        private int _siteId;
         private bool _wildCardSkipAppend = false;
 
         /// <summary>
@@ -60,6 +61,8 @@ namespace BVNetwork.FileNotFound.CustomRedirects
             }
         }
 
+        public int SiteId { get; set; }
+
         /// <summary>
         /// Tells if the new url is a virtual url, not containing
         /// the base root url to redirect to. All urls starting with
@@ -96,21 +99,23 @@ namespace BVNetwork.FileNotFound.CustomRedirects
         {
         }
 
-        public CustomRedirect(string oldUrl, string newUrl, bool skipWildCardAppend)
-            : this(oldUrl, newUrl)
+        public CustomRedirect(string oldUrl, string newUrl, bool skipWildCardAppend, int siteId)
+            : this(oldUrl, newUrl, siteId)
         {
             _wildCardSkipAppend = skipWildCardAppend;
         }
 
-        public CustomRedirect(string oldUrl, string newUrl)
+        public CustomRedirect(string oldUrl, string newUrl, int siteId)
         {
             _oldUrl = oldUrl;
             _newUrl = newUrl;
+            _siteId = siteId;
         }
         public CustomRedirect(CustomRedirect redirect)
         {
             _oldUrl = redirect._oldUrl;
             _newUrl = redirect._newUrl;
+            _siteId = redirect._siteId;
             _wildCardSkipAppend = redirect._wildCardSkipAppend;
         }
         #endregion

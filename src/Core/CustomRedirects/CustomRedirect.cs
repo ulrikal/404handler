@@ -1,42 +1,33 @@
+using BVNetwork.NotFound.Core.Data;
 using EPiServer.Data;
 using EPiServer.Data.Dynamic;
 
 namespace BVNetwork.NotFound.Core.CustomRedirects 
 {
 
-    [EPiServerDataStore(AutomaticallyRemapStore = true, StoreName = "BVNetwork.FileNotFound.Redirects.CustomRedirect")]
-    public class CustomRedirect : IDynamicData
+	[EPiServerDataStore(AutomaticallyRemapStore = true, StoreName = "BVNetwork.FileNotFoundMultiSite.Redirects.CustomRedirect")]
+	public class CustomRedirect : IDynamicData
 	{
+
 		private string _oldUrl;
 		private string _newUrl;
-        private bool _wildCardSkipAppend = false;
-        private int _state;
-        public int NotfoundErrorCount;
+	    public int NotfoundErrorCount;
+	    public int SiteId;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to skip appending the 
-        /// old url fragment to the new one. Default value is false.
-        /// </summary>
-        /// <remarks>
-        /// If you want to redirect many addresses below a specifc one to
-        /// one new url, set this to true. If we get a wild card match on
-        /// this url, the new url will be used in its raw format, and the
-        /// old url will not be appended to the new one.
-        /// </remarks>
-        /// <value><c>true</c> to skip appending old url if wild card match; otherwise, <c>false</c>.</value>
-        public bool WildCardSkipAppend
-        {
-            get
-            {
-                return _wildCardSkipAppend;
-            }
-            set
-            {
-                _wildCardSkipAppend = value;
-            }
-        }
+		/// <summary>
+		/// Gets or sets a value indicating whether to skip appending the 
+		/// old url fragment to the new one. Default value is false.
+		/// </summary>
+		/// <remarks>
+		/// If you want to redirect many addresses below a specifc one to
+		/// one new url, set this to true. If we get a wild card match on
+		/// this url, the new url will be used in its raw format, and the
+		/// old url will not be appended to the new one.
+		/// </remarks>
+		/// <value><c>true</c> to skip appending old url if wild card match; otherwise, <c>false</c>.</value>
+		public bool WildCardSkipAppend { get; set; }
 
-		public string OldUrl
+	    public string OldUrl
 		{
 			get
 			{
@@ -52,7 +43,7 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 		{
 			get
 			{
-               
+			   
 				return  _newUrl != null ? _newUrl.ToLower() : null;
 			}
 			set
@@ -62,20 +53,9 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 		}
 
 
-        public int  State
-        {
-            get
-            {
+		public int  State { get; set; }
 
-                return _state;
-            }
-            set
-            {
-                _state = value;
-            }
-        }
-
-		/// <summary>
+	    /// <summary>
 		/// Tells if the new url is a virtual url, not containing
 		/// the base root url to redirect to. All urls starting with
 		/// "/" is determined to be virtuals.
@@ -84,9 +64,7 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 		{
 			get
 			{
-				if (_newUrl.StartsWith("/"))
-					return true;
-				return false;
+				return _newUrl.StartsWith("/");
 			}
 		}
 
@@ -98,12 +76,12 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 		/// <returns>The Hash code of the old Url</returns>
 		public override int GetHashCode()
 		{
-          
-            //TODO: should not have to check for null
+		  
+			//TODO: should not have to check for null
 			return _oldUrl != null ? _oldUrl.GetHashCode() : 0;
 		}
 
-        public Identity Id { get; set; }
+		public Identity Id { get; set; }
 		
 
 		#region constructors...
@@ -112,33 +90,43 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 
 		}
 
-        public CustomRedirect(string oldUrl, string newUrl, bool skipWildCardAppend)
-            : this(oldUrl, newUrl) 
+		public CustomRedirect(string oldUrl, string newUrl, bool skipWildCardAppend, int siteId)
+			: this(oldUrl, newUrl, siteId) 
+		{
+			WildCardSkipAppend = skipWildCardAppend;
+		}
+
+        public CustomRedirect(string oldUrl, string newUrl)
         {
-            _wildCardSkipAppend = skipWildCardAppend;
+            _oldUrl = oldUrl;
+            _newUrl = newUrl;
+            SiteId = DataHandler.GetSiteIdFromUrl(oldUrl);
         }
 
-		public CustomRedirect(string oldUrl, string newUrl)
+        public CustomRedirect(string oldUrl, string newUrl, int siteId)
 		{
 			_oldUrl = oldUrl;
 			_newUrl = newUrl;
+		    SiteId = siteId;
 		}
 
 
-        public CustomRedirect(string oldUrl, int state, int count)
-        {
-            _oldUrl = oldUrl;
-            State = state;
-            NotfoundErrorCount = count;
-            
-        }
+		public CustomRedirect(string oldUrl, int state, int count, int siteId)
+		{
+			_oldUrl = oldUrl;
+			State = state;
+			NotfoundErrorCount = count;
+		    SiteId = siteId;
 
-        public CustomRedirect(CustomRedirect redirect)
-        {
-            _oldUrl = redirect._oldUrl;
-            _newUrl = redirect._newUrl;
-            _wildCardSkipAppend = redirect._wildCardSkipAppend;
-        }
+		}
+
+		public CustomRedirect(CustomRedirect redirect)
+		{
+			_oldUrl = redirect._oldUrl;
+			_newUrl = redirect._newUrl;
+			WildCardSkipAppend = redirect.WildCardSkipAppend;
+		    SiteId = redirect.SiteId;
+		}
 		#endregion
 		
 	}

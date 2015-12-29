@@ -31,6 +31,7 @@ namespace BVNetwork.NotFound.Core.Configuration
     /// </summary>
     public class Configuration
     {
+        // ReSharper disable InconsistentNaming
         private const string DEF_REDIRECTS_XML_FILE = "~/CustomRedirects.config";
         private const string DEF_NOTFOUND_PAGE = "~/bvn/filenotfound/notfound.aspx";
         private const LoggerMode DEF_LOGGING = LoggerMode.On;
@@ -40,11 +41,12 @@ namespace BVNetwork.NotFound.Core.Configuration
         private const string KEY_ERROR_FALLBACK = "EPfBVN404UseStdErrorHandlerAsFallback";
         private const FileNotFoundMode DEF_NOTFOUND_MODE = FileNotFoundMode.On;
         private static FileNotFoundMode _handlerMode = DEF_NOTFOUND_MODE;
-        private static bool _handlerMode_IsRead = false;
-        private static bool _fallbackToEPiServerError = false;
-        private static bool _fallbackToEPiServerError_IsRead = false;
+        private static bool _handlerMode_IsRead;
+        private static bool _fallbackToEPiServerError;
+        private static bool _fallbackToEPiServerErrorIsRead;
 
-        public const int CURRENT_VERSION = 3;
+        public const int CURRENT_VERSION = 4;
+        // ReSharper restore InconsistentNaming
 
 
 
@@ -63,9 +65,9 @@ namespace BVNetwork.NotFound.Core.Configuration
         {
             get
             {
-                if (_fallbackToEPiServerError_IsRead == false)
+                if (_fallbackToEPiServerErrorIsRead == false)
                 {
-                    _fallbackToEPiServerError_IsRead = true;
+                    _fallbackToEPiServerErrorIsRead = true;
                     if (ConfigurationManager.AppSettings[KEY_ERROR_FALLBACK] != null)
                         bool.TryParse(ConfigurationManager.AppSettings[KEY_ERROR_FALLBACK], out _fallbackToEPiServerError);
                 }
@@ -108,7 +110,7 @@ namespace BVNetwork.NotFound.Core.Configuration
         {
             get
             {
-                string mode = BVNetwork.NotFound.Configuration.Bvn404HandlerConfiguration.Instance.Logging;
+                string mode = Bvn404HandlerConfiguration.Instance.Logging;
                 if (mode == null)
                     mode = DEF_LOGGING.ToString();
 
@@ -135,8 +137,7 @@ namespace BVNetwork.NotFound.Core.Configuration
             get
             {
 
-                if (Bvn404HandlerConfiguration.Instance.FileNotFoundPage == null ||
-                   Bvn404HandlerConfiguration.Instance.FileNotFoundPage == string.Empty)
+                if (string.IsNullOrEmpty(Bvn404HandlerConfiguration.Instance.FileNotFoundPage))
                 {
                     return DEF_NOTFOUND_PAGE;
                 }

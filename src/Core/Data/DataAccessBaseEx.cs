@@ -3,23 +3,27 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using EPiServer.Data;
+using EPiServer.DataAccess;
 using EPiServer.Logging;
+using EPiServer.ServiceLocation;
 
 namespace BVNetwork.NotFound.Core.Data
 {
-    public class DataAccessBaseEx : EPiServer.DataAccess.DataAccessBase
+    public class DataAccessBaseEx : DataAccessBase
     {
-        public DataAccessBaseEx(EPiServer.Data.IDatabaseHandler handler)
+        public DataAccessBaseEx(IDatabaseHandler handler)
             : base(handler)
         {
-            this.Database = handler;
+            Database = handler;
         }
 
         public static DataAccessBaseEx GetWorker()
         {
-            return EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<DataAccessBaseEx>();
+            return ServiceLocator.Current.GetInstance<DataAccessBaseEx>();
         }
-        private const string REDIRECTSTABLE = "[dbo].[BVN.NotFoundRequests]";
+        // ReSharper disable once InconsistentNaming
+        private const string REDIRECTSTABLE = "[dbo].[BVN.NotFoundMultiSiteRequests]";
 
         private static readonly ILogger Logger = LogManager.GetLogger();
 
@@ -27,22 +31,23 @@ namespace BVNetwork.NotFound.Core.Data
         {
 
 
-            return base.Database.Execute<DataSet>(delegate
+            return Database.Execute(delegate
             {
                 using (DataSet ds = new DataSet())
                 {
                     try
                     {
-                        DbCommand command = this.CreateCommand(sqlCommand);
+                        DbCommand command = CreateCommand(sqlCommand);
                         if (parameters != null)
                         {
-                            foreach (SqlParameter parameter in parameters)
+                            foreach (var dbDataParameter in parameters)
                             {
+                                var parameter = (SqlParameter) dbDataParameter;
                                 command.Parameters.Add(parameter);
                             }
                         }
                         command.CommandType = CommandType.Text;
-                        base.CreateDataAdapter(command).Fill(ds);
+                        CreateDataAdapter(command).Fill(ds);
                     }
                     catch (Exception ex)
                     {
@@ -57,13 +62,13 @@ namespace BVNetwork.NotFound.Core.Data
 
         public bool ExecuteNonQuery(string sqlCommand)
         {
-            return base.Database.Execute<bool>(delegate
+            return Database.Execute(delegate
             {
                 bool success = true;
 
                 try
                 {
-                    IDbCommand command = this.CreateCommand(sqlCommand);
+                    IDbCommand command = CreateCommand(sqlCommand);
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQuery();
                 }
@@ -82,12 +87,12 @@ namespace BVNetwork.NotFound.Core.Data
 
         public int ExecuteScalar(string sqlCommand)
         {
-            return base.Database.Execute<int>(delegate
+            return Database.Execute(delegate
             {
                 int result;
                 try
                 {
-                    IDbCommand dbCommand = this.CreateCommand(sqlCommand);
+                    IDbCommand dbCommand = CreateCommand(sqlCommand);
                     dbCommand.CommandType = CommandType.Text;
                     result = (int)dbCommand.ExecuteScalar();
                 }
@@ -105,23 +110,38 @@ namespace BVNetwork.NotFound.Core.Data
             });
         }
 
-        public DataSet GetAllClientRequestCount()
+        public DataSet FindSiteIdByHost(string hostName)
         {
-            string sqlCommand = string.Format("SELECT [OldUrl], COUNT(*) as Requests FROM {0} GROUP BY [OldUrl] order by Requests desc", REDIRECTSTABLE);
-            return ExecuteSQL(sqlCommand, null);
+            string sqlCommand = "SELECT [pkId] FROM [dbo].[tblSiteDefinition] WHERE [SiteUrl] = @hostName";
+            var hostNameParam = CreateParameter("hostName", DbType.String, 100);
+            hostNameParam.Value = hostName;
+            var parameters = new List<IDbDataParameter> { hostNameParam };
+            return ExecuteSQL(sqlCommand, parameters);
+           
         }
 
-        public void DeleteRowsForRequest(string oldUrl)
+        public DataSet GetAllClientRequestCount(int siteId)
         {
-            string sqlCommand = string.Format("DELETE FROM {0} WHERE [OldUrl] = @oldurl", REDIRECTSTABLE);
-            var oldUrlParam = this.CreateParameter("oldurl", DbType.String, 4000);
+            string sqlCommand = string.Format("SELECT [OldUrl], COUNT(*) as Requests FROM {0} WHERE [fkId] = @siteId GROUP BY [OldUrl] order by Requests desc", REDIRECTSTABLE);
+            var siteIdParam = CreateParameter("siteId", DbType.Int64);
+            siteIdParam.Value = siteId;
+            var parameters = new List<IDbDataParameter> {siteIdParam};
+            return ExecuteSQL(sqlCommand, parameters);
+        }
+
+        public void DeleteRowsForRequest(string oldUrl, int siteId)
+        {
+            string sqlCommand = string.Format("DELETE FROM {0} WHERE [OldUrl] = @oldurl AND [fkId] = @siteId", REDIRECTSTABLE);
+            var oldUrlParam = CreateParameter("oldurl", DbType.String, 4000);
             oldUrlParam.Value = oldUrl;
-            var parameters = new List<IDbDataParameter>();
-            parameters.Add(oldUrlParam);
+            var siteIdParam = CreateParameter("siteId", DbType.Int64);
+            siteIdParam.Value = siteId;
+
+            var parameters = new List<IDbDataParameter> {oldUrlParam, siteIdParam};
             ExecuteSQL(sqlCommand, parameters);
         } 
 
-        public void DeleteSuggestions(int maxErrors, int minimumDaysOld)
+        public void DeleteSuggestions(int maxErrors, int minimumDaysOld, int siteId)
         { 
             string sqlCommand = string.Format(@"delete from {0}
                                                 where [OldUrl] in (
@@ -130,35 +150,47 @@ namespace BVNetwork.NotFound.Core.Data
                                                       select [OldUrl]
                                                       from {0}
                                                       Where DATEDIFF(day, [Requested], getdate()) >= {1}
+                                                      and [fkId] = @siteId
                                                       group by [OldUrl]
                                                       having count(*) <= {2} 
                                                       ) t
                                                 )",REDIRECTSTABLE, minimumDaysOld, maxErrors);
-            ExecuteSQL(sqlCommand, null);
+
+            var siteIdParam = CreateParameter("siteId", DbType.Int64);
+            siteIdParam.Value = siteId;
+            var parameters = new List<IDbDataParameter> { siteIdParam };
+            ExecuteSQL(sqlCommand, parameters);
         }
-        public void DeleteAllSuggestions()
+        public void DeleteAllSuggestions(int siteId)
         {
-            string sqlCommand = string.Format(@"delete from {0}", REDIRECTSTABLE);
-            ExecuteSQL(sqlCommand, null);
+            string sqlCommand = string.Format(@"delete from {0} where [fkId] = @siteId", REDIRECTSTABLE);
+            var siteIdParam = CreateParameter("siteId", DbType.Int64);
+            siteIdParam.Value = siteId;
+            var parameters = new List<IDbDataParameter> { siteIdParam };
+            ExecuteSQL(sqlCommand, parameters);
         }
 
-        public DataSet GetRequestReferers(string url)
+        public DataSet GetRequestReferers(string url, int siteId)
         {
-            string sqlCommand = string.Format("SELECT [Referer], COUNT(*) as Requests FROM {0} where [OldUrl] = @oldurl  GROUP BY [Referer] order by Requests desc", REDIRECTSTABLE);
-            var oldUrlParam = this.CreateParameter("oldurl", DbType.String, 4000);
+            string sqlCommand = string.Format("SELECT [Referer], COUNT(*) as Requests FROM {0} where [OldUrl] = @oldurl and [fkId] = @siteId GROUP BY [Referer] order by Requests desc", REDIRECTSTABLE);
+            var oldUrlParam = CreateParameter("oldurl", DbType.String, 4000);
             oldUrlParam.Value = url;
+            var siteIdParam = CreateParameter("siteId", DbType.Int64);
+            siteIdParam.Value = siteId;
 
-            var parameters = new List<IDbDataParameter>();
-            parameters.Add(oldUrlParam);
+            var parameters = new List<IDbDataParameter> {oldUrlParam, siteIdParam};
             return ExecuteSQL(sqlCommand, parameters);
 
         }
 
-        public DataSet GetTotalNumberOfSuggestions()
+        public DataSet GetTotalNumberOfSuggestions(int siteId)
         {
 
-            string sqlCommand = string.Format("SELECT COUNT(DISTINCT [OldUrl]) FROM {0}", REDIRECTSTABLE);
-            return ExecuteSQL(sqlCommand, null);
+            string sqlCommand = string.Format("SELECT COUNT(DISTINCT [OldUrl]) FROM {0} WHERE [fkId] = @siteId", REDIRECTSTABLE);
+            var siteIdParam = CreateParameter("siteId", DbType.Int64);
+            siteIdParam.Value = siteId;
+            var parameters = new List<IDbDataParameter> { siteIdParam };
+            return ExecuteSQL(sqlCommand, parameters);
         }
 
 
@@ -166,7 +198,7 @@ namespace BVNetwork.NotFound.Core.Data
         public int Check404Version()
         {
 
-            return Database.Execute<int>(() =>
+            return Database.Execute(() =>
     {
 
         string sqlCommand = "dbo.bvn_notfoundversion";
@@ -175,14 +207,14 @@ namespace BVNetwork.NotFound.Core.Data
         {
 
             //  base.Database.Connection.Open();
-            DbCommand command = this.CreateCommand();
+            DbCommand command = CreateCommand();
 
-            command.Parameters.Add(this.CreateReturnParameter());
+            command.Parameters.Add(CreateReturnParameter());
             command.CommandText = sqlCommand;
             command.CommandType = CommandType.StoredProcedure;
             //  command.Connection = base.Database.Connection;
             command.ExecuteNonQuery();
-            version = Convert.ToInt32(this.GetReturnValue(command).ToString());
+            version = Convert.ToInt32(GetReturnValue(command).ToString());
         }
         catch (SqlException)
         {
@@ -193,55 +225,48 @@ namespace BVNetwork.NotFound.Core.Data
         {
             Logger.Error(string.Format("Error during NotFoundHandler version check:{0}", ex));
         }
-        finally
-        {
-            // base.Database.Connection.Close();
-        }
         return version;
     });
 
         }
 
 
-        public void LogRequestToDb(string oldUrl, string referer, DateTime now)
+        public void LogRequestToDb(string oldUrl, string referer, DateTime now, int siteId)
         {
-            Database.Execute<bool>(() =>
+            Database.Execute(() =>
                {
-                   string sqlCommand = "INSERT INTO [dbo].[BVN.NotFoundRequests] (" +
+                   string sqlCommand = string.Format("INSERT INTO {0} (" +
                                        "Requested, OldUrl, " +
-                                       "Referer" +
+                                       "Referer, fkId" +
                                        ") VALUES (" +
                                        "@requested, @oldurl, " +
-                                       "@referer" +
-                                       ")";
+                                       "@referer, @siteId" +
+                                       ")", REDIRECTSTABLE);
                    try
                    {
-                       //   base.Database.Connection.Open();
-                       // this.OpenConnection();
-                       IDbCommand command = this.CreateCommand();
+                       IDbCommand command = CreateCommand();
 
-                       var requstedParam = this.CreateParameter("requested", DbType.DateTime, 0);
+                       var requstedParam = CreateParameter("requested", DbType.DateTime, 0);
                        requstedParam.Value = now;
-                       var refererParam = this.CreateParameter("referer", DbType.String, 4000);
+                       var refererParam = CreateParameter("referer", DbType.String, 4000);
                        refererParam.Value = referer;
-                       var oldUrlParam = this.CreateParameter("oldurl", DbType.String, 4000);
+                       var oldUrlParam = CreateParameter("oldurl", DbType.String, 4000);
                        oldUrlParam.Value = oldUrl;
+                       var siteIdParam = CreateParameter("siteId", DbType.Int64);
+                       siteIdParam.Value = siteId;
                        command.Parameters.Add(requstedParam);
                        command.Parameters.Add(refererParam);
                        command.Parameters.Add(oldUrlParam);
+                       command.Parameters.Add(siteIdParam);
                        command.CommandText = sqlCommand;
                        command.CommandType = CommandType.Text;
-                       command.Connection = base.Database.Connection;
+                       command.Connection = Database.Connection;
                        command.ExecuteNonQuery();
                    }
                    catch (Exception ex)
                    {
 
                        Logger.Error("An error occured while logging a 404 handler error. Ex:" + ex);
-                   }
-                   finally
-                   {
-                       //    base.Database.Connection.Close();
                    }
                    return true;
                });

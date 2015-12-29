@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Web;
+using Castle.Components.DictionaryAdapter;
+using EPiServer.Web;
 
 namespace BVNetwork.NotFound.Core.Data
 {
@@ -75,8 +78,14 @@ namespace BVNetwork.NotFound.Core.Data
 
         public static int GetSiteIdFromUrl(string url)
         {
+            //TODO FIXA!
             string[] urlHostArray = url.Split('/');
-            string urlHost = (string) urlHostArray.GetValue(urlHostArray.Length - 2);
+            string urlHost = urlHostArray[0];
+            if (urlHostArray.Length > 2)
+            {
+               urlHost = (string)urlHostArray.GetValue(urlHostArray.Length - 2);
+            }
+            
 
             var dataAccess = DataAccessBaseEx.GetWorker();
             var hostDataSet = dataAccess.FindSiteIdByHost(urlHost);
@@ -86,12 +95,46 @@ namespace BVNetwork.NotFound.Core.Data
                 if (table.Rows.Count > 0)
                 {
                     var row = table.Rows[0];
-                    return Convert.ToInt32(row[1]);
+                    return Convert.ToInt32(row[0]);
                 }
             }
             return -1;
         }
 
 
+        public static List<int> GetAllSiteIds()
+        {
+            List<int> siteIds = new List<int>();
+            var dataAccess = DataAccessBaseEx.GetWorker();
+            var hostDataSet = dataAccess.FindSiteIds();
+            foreach (DataTable table in hostDataSet.Tables)
+            {
+                if (table.Rows.Count > 0)
+                {
+                    foreach (DataRow row in table.Rows)
+                    {
+                        siteIds.Add(Convert.ToInt32(row[0]));
+                    }
+                }
+                
+            }
+            return siteIds;
+        }
+
+        public static int GetCurrentSiteId()
+        {
+            var dataAccess = DataAccessBaseEx.GetWorker();
+            var hostDataSet = dataAccess.FindSiteIdByHost(SiteDefinition.Current.SiteUrl.Host);
+            foreach (DataTable table in hostDataSet.Tables)
+            {
+                if (table.Rows.Count > 0)
+                {
+                    var row = table.Rows[0];
+                    return Convert.ToInt32(row[0]);
+                }
+            }
+            return -1;
+
+        }
     }
 }

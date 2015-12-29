@@ -33,10 +33,21 @@ namespace BVNetwork.NotFound.Controllers
             }
         }
 
-        public ActionResult Index(int? pageNumber, string searchWord, int? pageSize, bool? isSuggestions, int siteId)
+        public ActionResult Index(int? pageNumber, string searchWord, int? pageSize, bool? isSuggestions, int siteId = 0)
         {
 
             CheckAccess();
+
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
+            //eller så här?
+            if (siteId <= 0)
+            {
+                List<int> siteIds = DataHandler.GetAllSiteIds();
+                siteId = siteIds.FirstOrDefault();
+            }
 
             if (!string.IsNullOrEmpty(CustomRedirectHandler.CustomRedirectHandlerException))
             {
@@ -59,9 +70,13 @@ namespace BVNetwork.NotFound.Controllers
             return View("Index", GetRedirectIndexViewData(pageNumber, customRedirectList, GetSearchResultInfo(searchWord, customRedirectList.Count, false, siteId), searchWord, pageSize, false, siteId));
         }
 
-        public ActionResult SaveSuggestion(string oldUrl, string newUrl, string skipWildCardAppend, int? pageNumber, int? pageSize, int siteId)
+        public ActionResult SaveSuggestion(string oldUrl, string newUrl, string skipWildCardAppend, int? pageNumber, int? pageSize, int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             SaveRedirect(oldUrl, newUrl, skipWildCardAppend, siteId);
 
             // delete rows from DB
@@ -78,9 +93,13 @@ namespace BVNetwork.NotFound.Controllers
             return View("Index", viewData);
         }
 
-        public ActionResult Suggestions(int siteId)
+        public ActionResult Suggestions(int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             return Index(null, "", null, true, siteId);
         }
 
@@ -92,9 +111,13 @@ namespace BVNetwork.NotFound.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult Save(string oldUrl, string newUrl, string skipWildCardAppend, int? pageNumber, int? pageSize, int siteId)
+        public ActionResult Save(string oldUrl, string newUrl, string skipWildCardAppend, int? pageNumber, int? pageSize, int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             SaveRedirect(oldUrl, newUrl, skipWildCardAppend, siteId);
             List<CustomRedirect> redirectList = GetData(null, siteId);
             string actionInfo = string.Format(LocalizationService.Current.GetString("/gadget/redirects/saveredirect"), oldUrl, newUrl);
@@ -102,8 +125,12 @@ namespace BVNetwork.NotFound.Controllers
 
         }
 
-        public void SaveRedirect(string oldUrl, string newUrl, string skipWildCardAppend, int siteId)
+        public void SaveRedirect(string oldUrl, string newUrl, string skipWildCardAppend, int siteId = 0)
         {
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
 
             Logger.Debug("Adding redirect for site {2}: '{0}' -> '{1}'", oldUrl, newUrl, siteId);
             // Get hold of the datastore
@@ -113,9 +140,13 @@ namespace BVNetwork.NotFound.Controllers
 
         }
 
-        public ActionResult IgnoreRedirect(string oldUrl, int pageNumber, string searchWord, int pageSize, int siteId)
+        public ActionResult IgnoreRedirect(string oldUrl, int pageNumber, string searchWord, int pageSize, int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             // delete rows from DB
             var dbAccess = DataAccessBaseEx.GetWorker();
             dbAccess.DeleteRowsForRequest(oldUrl, siteId);
@@ -124,7 +155,9 @@ namespace BVNetwork.NotFound.Controllers
             var redirect = new CustomRedirect
             {
                 OldUrl = oldUrl,
-                State = Convert.ToInt32(DataStoreHandler.State.Ignored)
+                State = Convert.ToInt32(DataStoreHandler.State.Ignored),
+                SiteId = siteId
+                
             };
             DataStoreHandler dsHandler = new DataStoreHandler();
             dsHandler.SaveCustomRedirect(redirect);
@@ -140,9 +173,13 @@ namespace BVNetwork.NotFound.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult Delete(string oldUrl, int? pageNumber, string searchWord, int? pageSize, int siteId)
+        public ActionResult Delete(string oldUrl, int? pageNumber, string searchWord, int? pageSize, int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
 
             Logger.Debug("Deleting redirect: '{0}'", oldUrl);
 
@@ -165,8 +202,12 @@ namespace BVNetwork.NotFound.Controllers
         /// <param name="isSuggestions"></param>
         /// <param name="siteId"></param>
         /// <returns></returns>
-        public RedirectIndexViewData GetRedirectIndexViewData(int? pageNumber, List<CustomRedirect> redirectList, string actionInformation, string searchWord, int? pageSize, bool isSuggestions, int siteId)
+        public RedirectIndexViewData GetRedirectIndexViewData(int? pageNumber, List<CustomRedirect> redirectList, string actionInformation, string searchWord, int? pageSize, bool isSuggestions, int siteId = 0)
         {
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             RedirectIndexViewData indexData = new RedirectIndexViewData
             {
                 IsSuggestions = isSuggestions,
@@ -187,41 +228,61 @@ namespace BVNetwork.NotFound.Controllers
 
         }
 
-        public ActionResult Ignored(int siteId)
+        public ActionResult Ignored(int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             DataStoreHandler dsHandler = new DataStoreHandler();
             var ignoredRedirects = dsHandler.GetIgnoredRedirect(siteId);
             return View("Ignored", ignoredRedirects);
         }
-        public ActionResult Deleted(int siteId)
+        public ActionResult Deleted(int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             DataStoreHandler dsHandler = new DataStoreHandler();
             var deletedRedirects = dsHandler.GetDeletedRedirect(siteId);
             return View("Deleted", deletedRedirects);
         }
 
 
-        public ActionResult Unignore(string url, int siteId)
+        public ActionResult Unignore(string url, int siteId= 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             DataStoreHandler dsHandler = new DataStoreHandler();
             dsHandler.DeleteCustomRedirect(url, siteId);
             return Ignored(siteId);
         }
 
-        public ActionResult Referers(string url, int siteId)
+        public ActionResult Referers(string url, int siteId= 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             var referers = DataHandler.GetReferers(url, siteId);
             ViewData.Add("refererUrl", url);
             return View("Referers", referers);
         }
 
-        public ActionResult DeleteAllIgnored(int siteId)
+        public ActionResult DeleteAllIgnored(int siteId= 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             var dsHandler = new DataStoreHandler();
             int deleteCount = dsHandler.DeleteAllIgnoredRedirects(siteId);
             string infoText = string.Format(LocalizationService.Current.GetString("/gadget/redirects/ignoredremoved"), deleteCount);
@@ -229,19 +290,27 @@ namespace BVNetwork.NotFound.Controllers
             return View("Administer");
         }
 
-        public ActionResult DeleteAllSuggestions(int siteId)
+        public ActionResult DeleteAllSuggestions(int siteId= 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             DataAccessBaseEx.GetWorker().DeleteAllSuggestions(siteId);
             ViewData["information"] = LocalizationService.Current.GetString("/gadget/redirects/suggestionsdeleted");
             return View("Administer");
         }
 
-        public ActionResult DeleteAllRedirects()
+        public ActionResult DeleteAllRedirects(int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             DataStoreHandler dsHandler = new DataStoreHandler();
-            dsHandler.DeleteAllCustomRedirects();
+            dsHandler.DeleteAllCustomRedirects(siteId);
             DataStoreEventHandlerHook.DataStoreUpdated();
             ViewData["information"] = LocalizationService.Current.GetString("/gadget/redirects/redirectsdeleted");
             return View("Administer");
@@ -253,9 +322,13 @@ namespace BVNetwork.NotFound.Controllers
         /// <param name="url"></param>
         /// <param name="siteId"></param>
         /// <returns></returns>
-        public ActionResult DeleteDeleted(string url, int siteId)
+        public ActionResult DeleteDeleted(string url, int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             var dsHandler = new DataStoreHandler();
             dsHandler.DeleteCustomRedirect(url, siteId);
             return Deleted(siteId);
@@ -316,9 +389,13 @@ namespace BVNetwork.NotFound.Controllers
         }
 
 
-        public ActionResult DeleteSuggestions(int maxErrors, int minimumDays, int siteId)
+        public ActionResult DeleteSuggestions(int maxErrors, int minimumDays, int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             DataAccessBaseEx.GetWorker().DeleteSuggestions(maxErrors, minimumDays, siteId);
             ViewData["information"] = LocalizationService.Current.GetString("/gadget/redirects/suggestionsdeleted");
             return View("Administer");
@@ -332,8 +409,12 @@ namespace BVNetwork.NotFound.Controllers
         /// <param name="isSuggestions"></param>
         /// <param name="siteId"></param>
         /// <returns></returns>
-        public string GetSearchResultInfo(string searchWord, int count, bool isSuggestions, int siteId)
+        public string GetSearchResultInfo(string searchWord, int count, bool isSuggestions, int siteId = 0)
         {
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             string actionInfo;
             if (string.IsNullOrEmpty(searchWord) && !isSuggestions)
             {
@@ -354,16 +435,24 @@ namespace BVNetwork.NotFound.Controllers
         /// </summary>
         /// <param name="searchWord"></param>
         /// <returns></returns>
-        public List<CustomRedirect> GetData(string searchWord, int siteId)
+        public List<CustomRedirect> GetData(string searchWord, int siteId = 0)
         {
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             DataStoreHandler dsHandler = new DataStoreHandler();
-            var customRedirectList = string.IsNullOrEmpty(searchWord) ? dsHandler.GetCustomRedirects(true) : dsHandler.SearchCustomRedirects(searchWord, siteId);
+            var customRedirectList = string.IsNullOrEmpty(searchWord) ? dsHandler.GetCustomRedirects(true, siteId) : dsHandler.SearchCustomRedirects(searchWord, siteId);
 
             return customRedirectList;
         }
 
-        public List<CustomRedirect> GetSuggestions(String searchWord, int siteId)
+        public List<CustomRedirect> GetSuggestions(String searchWord, int siteId = 0)
         {
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
 
             var customRedirectList = new List<CustomRedirect>();
             var dict = DataHandler.GetRedirects(siteId);
@@ -375,8 +464,12 @@ namespace BVNetwork.NotFound.Controllers
 
             return customRedirectList;
         }
-        public List<CustomRedirect> GetDeletedUrls(int siteId)
+        public List<CustomRedirect> GetDeletedUrls(int siteId = 0)
         {
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
             DataStoreHandler dsHandler = new DataStoreHandler();
             var customRedirectList = dsHandler.GetDeletedRedirect(siteId);
 
@@ -398,9 +491,13 @@ namespace BVNetwork.NotFound.Controllers
             get { return LocalizationService.Current.GetString("/gadget/redirects/description"); }
         }
 
-        public ActionResult AddDeletedUrl(string oldUrl, int siteId)
+        public ActionResult AddDeletedUrl(string oldUrl, int siteId = 0)
         {
             CheckAccess();
+            if (siteId <= 0)
+            {
+                siteId = DataHandler.GetCurrentSiteId();
+            }
 
 
             // add redirect to dds with state "deleted"

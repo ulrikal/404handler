@@ -5,24 +5,35 @@
 <div class="notfound">
        <div class="epi-formArea">
             <fieldset>
-               <%=string.Format(LanguageManager.Instance.Translate("/gadget/redirects/ignoredsuggestions"), Model.Count)%>
+               <%=string.Format(EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/deletedurls"), Model.Count)%>
          
             </fieldset>
         </div>
 
-       <% Html.RenderPartial("Menu", "Ignored"); %>
+       <% Html.RenderPartial("Menu", "Deleted"); %>
+
+    <% Html.BeginGadgetForm("AddDeletedUrl"); %>
+
     <table class="epi-default">
         <thead>
             <tr>
                 <th>
                     <label>
-                        <%=LanguageManager.Instance.Translate("/gadget/redirects/url")%></label>
+                        <%=EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/url")%></label>
                 </th>
-                <th>
-                 <%=LanguageManager.Instance.Translate("/gadget/redirects/unignore")%>
-                </th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
+          
+        <tr>
+            <td class="longer">
+                <input style="word-wrap: break-word" name="oldUrl" class="required redirect-longer" />
+            </td>
+            <td class="shorter delete">
+                    <button type="submit" class="notfoundbutton">Add</button>
+            </td>
+        </tr>        
+
         <%foreach (CustomRedirect m in Model) { %>
         <tr>
             <td class="redirect-longer">
@@ -32,7 +43,7 @@
                 <%= Html.ViewLink(
                         "",  // html helper
                         "Delete",  // title
-                        "Unignore", // Action name
+                        "DeleteDeleted", // Action name
                         "epi-quickLinksDelete epi-iconToolbar-item-link epi-iconToolbar-delete", // css class
                         "Index",
                         new { url =  m.OldUrl })%>
@@ -40,4 +51,5 @@
         </tr>
         <%} %>
     </table>
+    <% Html.EndForm(); %>
 </div>

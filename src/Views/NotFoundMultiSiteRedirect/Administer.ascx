@@ -81,6 +81,7 @@
         </div>
     <br/>
     <table class="epi-default">
+        
         <tr>
          <td>
             <div class="longer"><%= Html.Translate("/gadget/redirects/deleteignoreinfo") %>
@@ -137,7 +138,7 @@
        
              <tr>
                     <td class="notfound-full">  
-        <form id="notfoundajaxUploadForm" action="<%=Paths.ProtectedRootPath %>BVNetwork.404Handler/NotFoundRedirect/ImportRedirects" method="post" enctype="multipart/form-data">
+        <form id="notfoundajaxUploadForm" action="<%=Paths.ProtectedRootPath %>BVNetwork.404Handler/NotFoundMultiSiteRedirect/ImportRedirects" method="post" enctype="multipart/form-data">
                   <div class="longer">
                     <%= Html.Translate("/gadget/redirects/importinfo") %>
                         <label class="error"></label>
@@ -154,7 +155,7 @@
 
                   </tr>             <tr>
                     <td class="notfound-full">  
-        <form id="notfoundDeletedajaxUploadForm" action="<%=Paths.ProtectedRootPath %>BVNetwork.404Handler/NotFoundRedirect/ImportDeleted" method="post" enctype="multipart/form-data">
+        <form id="notfoundDeletedajaxUploadForm" action="<%=Paths.ProtectedRootPath %>BVNetwork.404Handler/NotFoundMultiSiteRedirect/ImportDeleted" method="post" enctype="multipart/form-data">
                   <div class="longer">
                     <%= Html.Translate("/gadget/redirects/importDeleted") %>
                         <label class="error"></label>

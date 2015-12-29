@@ -47,6 +47,7 @@
                 <suggesteionsdeleteinfo1>Permanently delete all suggestions with less than</suggesteionsdeleteinfo1>
                 <suggesteionsdeleteinfo2>error counts and older than</suggesteionsdeleteinfo2>
                 <suggesteionsdeleteinfo3>days</suggesteionsdeleteinfo3>
+              <choosesiteinfo>Choose which site this gadget is for</choosesiteinfo>
                 <deleteignoreinfo>Permanently delete all ignored suggestions</deleteignoreinfo>
                 <deleteallSuggestions>Permanently delete all suggestions</deleteallSuggestions>
                 <deleteallredirects>Permanently delete all custom redirects</deleteallredirects>

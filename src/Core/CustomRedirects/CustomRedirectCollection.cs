@@ -21,13 +21,15 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 		{
 			// Create case insensitive hash table
 			_quickLookupTables = new Dictionary<int, Hashtable>();
-		    //var siteDefinitions = 
-            //TODO Hämta alla sitedefinitions och deras ID från databasen
-		    for (int i = 1; i < 4; i++)
-		    {
-		        _quickLookupTables.Add(i, new Hashtable(StringComparer.InvariantCultureIgnoreCase));
-		    }
 
+
+			var siteDefinitions = DataHandler.GetAllSiteIds();
+			for (int i = 0; i < siteDefinitions.Count; i++)
+			{
+				_quickLookupTables.Add(siteDefinitions[i], new Hashtable(StringComparer.InvariantCultureIgnoreCase));
+				
+			}
+		  
 		}
 
 
@@ -35,8 +37,8 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 		#region Add
 		public int Add(CustomRedirect customRedirect)
 		{
-            // Add to quick look up table too
-            _quickLookupTables[customRedirect.SiteId].Add(customRedirect.OldUrl, customRedirect);
+			// Add to quick look up table too
+			_quickLookupTables[customRedirect.SiteId].Add(customRedirect.OldUrl, customRedirect);
 			return List.Add(customRedirect);
 		}
 		#endregion
@@ -52,14 +54,14 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 		#region Insert
 		public void Insert(int index, CustomRedirect customRedirect)
 		{
-            _quickLookupTables[customRedirect.SiteId].Add(customRedirect, customRedirect);
+			_quickLookupTables[customRedirect.SiteId].Add(customRedirect, customRedirect);
 			List.Insert(index, customRedirect);
 		}
 		#endregion
 		#region Remove
 		public void Remove(CustomRedirect customRedirect)
 		{
-            _quickLookupTables[customRedirect.SiteId].Remove(customRedirect);
+			_quickLookupTables[customRedirect.SiteId].Remove(customRedirect);
 			List.Remove(customRedirect);
 		}
 		#endregion
@@ -69,11 +71,11 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 		{
 			// Handle absolute addresses first
 			string url = urlNotFound.AbsoluteUri;
-		    int siteId = DataHandler.GetSiteIdFromUrl(urlNotFound.Host);
-		    if (siteId == -1)
-		    {
-		        return null;
-		    }
+			int siteId = DataHandler.GetSiteIdFromUrl(urlNotFound.Host);
+			if (siteId == -1)
+			{
+				return null;
+			}
 			CustomRedirect foundRedirect = FindInternal(url, siteId);
 
 			// Common case
@@ -100,42 +102,42 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
 			{
 				return foundRedirect as CustomRedirect;
 			}
-		    // No exact match could be done, so we'll check if the 404 url
-		    // starts with one of the urls we're matching against. This
-		    // will be kind of a wild card match (even though we only check
-		    // for the start of the url
-		    // Example: http://www.mysite.com/news/mynews.html is not found
-		    // We have defined an "<old>/news</old>" entry in the config
-		    // file. We will get a match on the /news part of /news/myne...
-		    // Depending on the skip wild card append setting, we will either
-		    // redirect using the <new> url as is, or we'll append the 404
-		    // url to the <new> url.
-		    IDictionaryEnumerator enumerator = _quickLookupTables[siteId].GetEnumerator();
-		    while (enumerator.MoveNext())
-		    {
-		        // See if this "old" url (the one that cannot be found) starts with one 
-		        if (url.StartsWith(enumerator.Key.ToString(), StringComparison.InvariantCultureIgnoreCase))
-		        {
-		            foundRedirect = _quickLookupTables[siteId][enumerator.Key];
-		            CustomRedirect cr = foundRedirect as CustomRedirect;
-		            if (cr != null && cr.State == (int) DataStoreHandler.State.Ignored)
-		            {
-		                return null;
-		            }
-		            if (cr != null && cr.WildCardSkipAppend)
-		            {
-		                // We'll redirect without appending the 404 url
-		                return cr;
-		            }
-		            // We need to append the 404 to the end of the
-		            // new one. Make a copy of the redir object as we
-		            // are changing it.
-		            CustomRedirect redirCopy = new CustomRedirect(cr);
-		            redirCopy.NewUrl = redirCopy.NewUrl + url.Substring(enumerator.Key.ToString().Length);
-		            return redirCopy;
-		        }
-		    }
-		    return null;
+			// No exact match could be done, so we'll check if the 404 url
+			// starts with one of the urls we're matching against. This
+			// will be kind of a wild card match (even though we only check
+			// for the start of the url
+			// Example: http://www.mysite.com/news/mynews.html is not found
+			// We have defined an "<old>/news</old>" entry in the config
+			// file. We will get a match on the /news part of /news/myne...
+			// Depending on the skip wild card append setting, we will either
+			// redirect using the <new> url as is, or we'll append the 404
+			// url to the <new> url.
+			IDictionaryEnumerator enumerator = _quickLookupTables[siteId].GetEnumerator();
+			while (enumerator.MoveNext())
+			{
+				// See if this "old" url (the one that cannot be found) starts with one 
+				if (url.StartsWith(enumerator.Key.ToString(), StringComparison.InvariantCultureIgnoreCase))
+				{
+					foundRedirect = _quickLookupTables[siteId][enumerator.Key];
+					CustomRedirect cr = foundRedirect as CustomRedirect;
+					if (cr != null && cr.State == (int) DataStoreHandler.State.Ignored)
+					{
+						return null;
+					}
+					if (cr != null && cr.WildCardSkipAppend)
+					{
+						// We'll redirect without appending the 404 url
+						return cr;
+					}
+					// We need to append the 404 to the end of the
+					// new one. Make a copy of the redir object as we
+					// are changing it.
+					CustomRedirect redirCopy = new CustomRedirect(cr);
+					redirCopy.NewUrl = redirCopy.NewUrl + url.Substring(enumerator.Key.ToString().Length);
+					return redirCopy;
+				}
+			}
+			return null;
 		}
 
 		public CustomRedirect FindInProviders(string oldUrl)

@@ -5,14 +5,14 @@ using EPiServer.Data.Dynamic;
 namespace BVNetwork.NotFound.Core.CustomRedirects 
 {
 
-	[EPiServerDataStore(AutomaticallyRemapStore = true, StoreName = "BVNetwork.FileNotFoundMultiSite.Redirects.CustomRedirect")]
+	[EPiServerDataStore(AutomaticallyCreateStore = true, AutomaticallyRemapStore = false)]
 	public class CustomRedirect : IDynamicData
 	{
 
 		private string _oldUrl;
 		private string _newUrl;
 	    public int NotfoundErrorCount;
-	    public int SiteId;
+	    public int SiteId { set; get; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to skip appending the 

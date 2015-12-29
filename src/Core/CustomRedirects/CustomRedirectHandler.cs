@@ -20,6 +20,7 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
         // Should only be instanciated by the static Current method
         protected CustomRedirectHandler()
         {
+
         }
         #endregion
 
@@ -53,12 +54,12 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
         /// Read the custom redirects from the dynamic data store, and 
         /// stores them in the CustomRedirect property
         /// </summary>
-        protected void LoadCustomRedirects()
+        protected void LoadCustomRedirects(int siteId)
         {
             DataStoreHandler dynamicHandler = new DataStoreHandler();
             _customRedirects = new CustomRedirectCollection();
 
-            foreach (CustomRedirect redirect in dynamicHandler.GetCustomRedirects(false))
+            foreach (CustomRedirect redirect in dynamicHandler.GetCustomRedirects(false, siteId))
                 _customRedirects.Add(redirect);
         }
 
@@ -71,25 +72,26 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
         {
             get
             {
-                Logger.Debug("Begin: Get Current CustomRedirectHandler");
-                // First check if there is a cached version of
-                // this object
-                var handler = GetHandlerFromCache();
-                if (handler != null)
-                {
-                    Logger.Debug("Returning cached handler.");
-                    Logger.Debug("End: Get Current CustomRedirectHandler");
-                    // Got the cached version, return it
-                    return handler;
-                }
+                //Logger.Debug("Begin: Get Current CustomRedirectHandler");
+                //// First check if there is a cached version of
+                //// this object
+                //var handler = GetHandlerFromCache();
+                //if (handler != null)
+                //{
+                //    Logger.Debug("Returning cached handler.");
+                //    Logger.Debug("End: Get Current CustomRedirectHandler");
+                //    // Got the cached version, return it
+                //    return handler;
+                //}
 
                 // Not cached, we need to create it
-                handler = new CustomRedirectHandler();
+               var handler = new CustomRedirectHandler();
                 // Load redirects with standard settings
                 Logger.Debug("Begin: Load custom redirects from dynamic data store");
                 try
                 {
-                    handler.LoadCustomRedirects();
+                    int siteId = DataHandler.GetCurrentSiteId();
+                    handler.LoadCustomRedirects(siteId);
                 }
                 catch (Exception ex)
                 {

@@ -112,12 +112,25 @@ namespace BVNetwork.NotFound.Core.Data
 
         public DataSet FindSiteIdByHost(string hostName)
         {
-            string sqlCommand = "SELECT [pkId] FROM [dbo].[tblSiteDefinition] WHERE [SiteUrl] = @hostName";
+
+            string sqlCommand = "SELECT [pkId] FROM [dbo].[tblSiteDefinition] WHERE [SiteUrl] = @hostName OR [SiteUrl] = @safehostName";
             var hostNameParam = CreateParameter("hostName", DbType.String, 100);
-            hostNameParam.Value = hostName;
-            var parameters = new List<IDbDataParameter> { hostNameParam };
-            return ExecuteSQL(sqlCommand, parameters);
-           
+            hostNameParam.Value = "http://" + hostName + "/";
+
+            var safehostNameParam = CreateParameter("safehostName", DbType.String, 100);
+            safehostNameParam.Value = "https://" + hostName + "/";
+
+            var parameters = new List<IDbDataParameter> { hostNameParam, safehostNameParam };
+            var result = ExecuteSQL(sqlCommand, parameters);
+            return result;
+
+
+        }
+
+        public DataSet FindSiteIds()
+        {
+            string sqlCommand = "SELECT [pkId] FROM [dbo].[tblSiteDefinition]";
+            return ExecuteSQL(sqlCommand, null);
         }
 
         public DataSet GetAllClientRequestCount(int siteId)
@@ -273,7 +286,6 @@ namespace BVNetwork.NotFound.Core.Data
         }
 
 
-
-
+       
     }
 }

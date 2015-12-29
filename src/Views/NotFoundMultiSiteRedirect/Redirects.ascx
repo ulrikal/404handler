@@ -33,15 +33,15 @@
                 <tr>
                     <th>
                         <label>
-                            <%=LanguageManager.Instance.Translate("/gadget/redirects/oldurl")%></label>
+                            <%=EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/oldurl")%></label>
                     </th>
                     <th>
                         <label>
-                            <%=LanguageManager.Instance.Translate("/gadget/redirects/newurl")%></label>
+                            <%=EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/newurl")%></label>
                     </th>
                     <th style="text-align: center">
                         <label>
-                            <%=LanguageManager.Instance.Translate("/gadget/redirects/wildcard")%></label>
+                            <%=EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/wildcard")%></label>
                     </th>
                     <th>
                     </th>
@@ -75,7 +75,7 @@
                 <td class="longer">
                     <%if (m.State.Equals((int)DataStoreHandler.State.Ignored))
                       {%>
-                    <i>[<%=LanguageManager.Instance.Translate("/gadget/redirects/ignored")%>]</i>
+                    <i>[<%=EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/ignored")%>]</i>
                     <%}
                       else
                       {  %>

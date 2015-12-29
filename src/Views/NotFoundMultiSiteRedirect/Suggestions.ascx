@@ -39,16 +39,16 @@
             <tr>
                 <th>
                     <label>
-                        <%=LanguageManager.Instance.Translate("/gadget/redirects/oldurl")%></label>
+                        <%=EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/oldurl")%></label>
                 </th>
                 <th>
                     <label>
-                        <%=LanguageManager.Instance.Translate("/gadget/redirects/newurl")%></label>
+                        <%=EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/newurl")%></label>
                 </th>
                 
                 <th style="text-align: center">
                     <label>
-                        <%=LanguageManager.Instance.Translate("/gadget/redirects/ignore")%></label>
+                        <%=EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/ignore")%></label>
                 </th>
             </tr>
         </thead>
@@ -70,7 +70,9 @@
                       
         %>
        
-        <%  var referers = DataHandler.GetReferers(m.OldUrl);
+        <%
+            var siteid = DataHandler.GetCurrentSiteId();
+            var referers = DataHandler.GetReferers(m.OldUrl, siteid);
             bool showReferers = true;
 
             if (referers.Count == 1 && referers.First().Key == DataHandler.UknownReferer)
@@ -145,7 +147,7 @@
             <td class="shorter delete">
                 <%= Html.ViewLink(
                                 "",  // html helper
-                                LanguageManager.Instance.Translate("/gadget/redirects/ignoreexplanation"),  // title
+                                EPiServer.Framework.Localization.LocalizationService.Current.GetString("/gadget/redirects/ignoreexplanation"),  // title
                                 "IgnoreRedirect", // Action name
                                 "epi-quickLinksDelete epi-iconToolbar-item-link epi-iconToolbar-delete", // css class
                                 "Index",

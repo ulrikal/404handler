@@ -93,13 +93,14 @@
     <Compile Include="Core\Obsolete\CustomRedirect.cs" />
     <Compile Include="Core\Upgrade\Upgrader.cs" />
     <Compile Include="Core\ColorHelper.cs" />
-    <Compile Include="Controllers\NotFoundRedirectController.cs" />
+    <Compile Include="Controllers\NotFoundMultiSiteRedirectController.cs" />
     <Compile Include="Models\RedirectIndexViewData.cs" />
     <Compile Include="Models\Suggestion.cs" />
     <Content Include="NotFound.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <None Include="Views\NotFoundRedirect\Deleted.ascx">
+    <None Include="app.config" />
+    <None Include="Views\NotFoundMultiSiteRedirect\Deleted.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </None>
     <EmbeddedResource Include="lang\bvnerrorhandler.xml" />
@@ -119,24 +120,28 @@
     <None Include="ClientResources\Content\RedirectGadget.css" />
     <None Include="ClientResources\Scripts\jquery.blockUI.js" />
     <None Include="ClientResources\Scripts\jquery.form.js" />
-    <None Include="Views\NotFoundRedirect\Administer.ascx" />
-    <None Include="Views\NotFoundRedirect\Ignored.ascx">
+    <None Include="Views\NotFoundMultiSiteRedirect\Administer.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </None>
-    <None Include="Views\NotFoundRedirect\Index.ascx">
+    <None Include="Views\NotFoundMultiSiteRedirect\Ignored.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </None>
-    <None Include="Views\NotFoundRedirect\Menu.ascx">
+    <None Include="Views\NotFoundMultiSiteRedirect\Index.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </None>
-    <None Include="Views\NotFoundRedirect\NotFoundPager.ascx">
+    <None Include="Views\NotFoundMultiSiteRedirect\Menu.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </None>
-    <None Include="Views\NotFoundRedirect\Redirects.ascx">
+    <None Include="Views\NotFoundMultiSiteRedirect\NotFoundPager.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </None>
-    <None Include="Views\NotFoundRedirect\Referers.ascx" />
-    <None Include="Views\NotFoundRedirect\Suggestions.ascx">
+    <None Include="Views\NotFoundMultiSiteRedirect\Redirects.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </None>
+    <None Include="Views\NotFoundMultiSiteRedirect\Referers.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </None>
+    <None Include="Views\NotFoundMultiSiteRedirect\Suggestions.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </None>
     <Compile Include="Configuration\Bvn404HandlerConfiguration.csd.cs">
@@ -291,28 +296,28 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+      <HintPath>packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.Razor.2.0.20710.0\lib\net40\System.Web.Razor.dll</HintPath>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />

@@ -136,6 +136,7 @@
             </div>
             <div class="shorter delete">
                   <input value="<%=m.OldUrl %>" name="oldUrl" class="redirect-longer" style="display: none" />
+                <input type="hidden" name="siteId" value='<%=m.SiteId %>'/>
                 <button class="notfoundbutton" name="submit" type="submit">Add</button>
               
                
@@ -151,7 +152,7 @@
                                 "IgnoreRedirect", // Action name
                                 "epi-quickLinksDelete epi-iconToolbar-item-link epi-iconToolbar-delete", // css class
                                 "Index",
-                                new { oldUrl = Uri.EscapeDataString(m.OldUrl), pageNumber = Model.PageNumber, searchWord = Model.SearchWord, pageSize = Model.PageSize })%>
+                                new { oldUrl = Uri.EscapeDataString(m.OldUrl), pageNumber = Model.PageNumber, searchWord = Model.SearchWord, pageSize = Model.PageSize, siteId = Model.SiteId })%>
             </td>
      
          

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Web;
 using Castle.Components.DictionaryAdapter;
+using EPiServer.DataAbstraction;
+using EPiServer.Globalization;
+using EPiServer.ServiceLocation;
 using EPiServer.Web;
 
 namespace BVNetwork.NotFound.Core.Data
@@ -85,6 +89,7 @@ namespace BVNetwork.NotFound.Core.Data
             {
                urlHost = (string)urlHostArray.GetValue(urlHostArray.Length - 2);
             }
+           
             
 
             var dataAccess = DataAccessBaseEx.GetWorker();

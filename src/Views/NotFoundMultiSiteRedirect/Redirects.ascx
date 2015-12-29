@@ -19,6 +19,7 @@
                      <button type="submit" class="notfoundbutton search"><%=Html.Translate("/gadget/redirects/search")%></button>
                     <input type="hidden" name="pageSize" value='<%=Model.PageSize %>' />
                     <input type="hidden" name="isSuggestions" value='<%=Model.IsSuggestions %>' />
+                    <input type="hidden" name="siteId" value='<%=Model.SiteId %>'/>
                 </div>
                 <%=Model.ActionInformation as string %>
             </fieldset>
@@ -92,12 +93,13 @@
                         "Delete", // Action name
                                         "epi-quickLinksDelete epi-iconToolbar-item-link epi-iconToolbar-delete", // css class
                         "Index",
-                        new { oldUrl =  Uri.EscapeDataString(m.OldUrl), pageNumber = Model.PageNumber, searchWord = Model.SearchWord, pageSize = Model.PageSize })%>
+                        new { oldUrl =  Uri.EscapeDataString(m.OldUrl), pageNumber = Model.PageNumber, searchWord = Model.SearchWord, pageSize = Model.PageSize, siteId = Model.SiteId })%>
                 </td>
             </tr>
             <%} %>
             <% 
                } %>
         </table>
+        <input type="hidden" name="siteId" value='<%=Model.SiteId %>'/>
         <% Html.EndForm(); %>
     </div>

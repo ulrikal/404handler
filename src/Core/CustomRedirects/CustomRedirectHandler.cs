@@ -13,14 +13,14 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
     {
         private static readonly ILogger Logger = LogManager.GetLogger();
         // ReSharper disable once InconsistentNaming
-        private const string CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE = "BvnCustomMultiSiteRedirectHandler";
+        private static string CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE;
         private CustomRedirectCollection _customRedirects;
 
         #region constructors...
         // Should only be instanciated by the static Current method
         protected CustomRedirectHandler()
         {
-
+            CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE = string.Format("BvnCustomMultiSiteRedirectHandler_{0}", DataHandler.GetCurrentSiteId());
         }
         #endregion
 
@@ -85,7 +85,7 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
                 //}
 
                 // Not cached, we need to create it
-               var handler = new CustomRedirectHandler();
+                var handler = new CustomRedirectHandler();
                 // Load redirects with standard settings
                 Logger.Debug("Begin: Load custom redirects from dynamic data store");
                 try

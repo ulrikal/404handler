@@ -19,8 +19,8 @@
       </dependencies>
     </metadata>
     <files>
-        <file src="bin\$configuration$\BVNetwork.EPi404.dll" target="lib\net45\" />  
-        <file src="bin\$configuration$\BVNetwork.404Handler.zip" target="content\modules\_protected\BVNetwork.404Handler\" />
+        <file src="bin\Debug\BVNetwork.EPi404.dll" target="lib\net45\" />  
+        <file src="bin\Debug\BVNetwork.404Handler.zip" target="content\modules\_protected\BVNetwork.404Handler\" />
         <file src="NotFound.aspx" target="content\NotFound.aspx" />
         <file src="web.config.install.xdt" target="content" />
     </files>

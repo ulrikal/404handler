@@ -25,12 +25,12 @@ namespace BVNetwork.NotFound.Core
         public static bool HandleRequest(string referer, Uri urlNotFound, out CustomRedirect foundRedirect)
         {
             string pathAndQuery = urlNotFound.PathAndQuery;
-            int siteId = FindSiteId(urlNotFound.Host);
+            int siteId = DataHandler.GetSiteIdFromUrl(urlNotFound.Host);
             foundRedirect = null;
 
             if (siteId == -1)
             {
-                //TODO då är det nåt fel, logga och så
+                Logger.Error("siteId is -1; couldn't find ");
                 return false;
             }
 
@@ -78,12 +78,7 @@ namespace BVNetwork.NotFound.Core
             return false;
         }
 
-        private static int FindSiteId(string urlHost)
-        {
-            return DataHandler.GetSiteIdFromUrl(urlHost);
-        }
-
-        public static void FileNotFoundExceptionHandler(object sender, EventArgs e)
+       public static void FileNotFoundExceptionHandler(object sender, EventArgs e)
         {
             HttpContext context = GetContext();
             if (context == null)

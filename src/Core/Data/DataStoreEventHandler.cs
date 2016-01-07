@@ -49,7 +49,6 @@ namespace BVNetwork.NotFound.Core.Data
         {
             _log.Debug("dataStoreInvalidationEvent '{2}' handled - raised by '{0}' on '{1}'", e.RaiserId, Environment.MachineName, e.EventId);
             _log.Debug("Begin: Clearing cache on '{0}'", Environment.MachineName);
-            //TODO clear only the right site?
             CustomRedirectHandler.ClearCache();
             _log.Debug("End: Clearing cache on '{0}'", Environment.MachineName);
 

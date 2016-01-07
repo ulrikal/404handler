@@ -148,11 +148,11 @@ namespace BVNetwork.NotFound.Core.Data
         public List<CustomRedirect> SearchCustomRedirects(string searchWord, int siteId)
         {
             DynamicDataStore store = DataStoreFactory.GetStore(typeof(CustomRedirect));
-            var CustomRedirects = from s in store.Items<CustomRedirect>()
+            var customRedirects = from s in store.Items<CustomRedirect>()
                                   where s.SiteId.Equals(siteId) && (s.NewUrl.Contains(searchWord) || s.OldUrl.Contains(searchWord))
                                   select s;
 
-            return CustomRedirects != null ? CustomRedirects.ToList() : null;
+            return customRedirects.ToList();
 
         }
 

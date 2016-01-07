@@ -66,6 +66,8 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
             {
                 return null;
             }
+
+            //TODO: Since we shouldn't use the host in our redirects, we should be able to remove this step
             CustomRedirect foundRedirect = FindInternal(url, siteId);
 
             // Common case

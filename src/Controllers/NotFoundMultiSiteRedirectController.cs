@@ -360,6 +360,7 @@ namespace BVNetwork.NotFound.Controllers
         {
             CheckAccess();
             var redirects = new CustomRedirectCollection();
+            var siteId = DataHandler.GetCurrentSiteId();
             using (var streamReader = new StreamReader(txtFile.InputStream))
             {
                 while (streamReader.Peek() >= 0)
@@ -370,6 +371,7 @@ namespace BVNetwork.NotFound.Controllers
                         redirects.Add(new CustomRedirect
                         {
                             OldUrl = url,
+                            SiteId = siteId,
                             State = (int)DataStoreHandler.State.Deleted,
                         });
                     }
@@ -498,12 +500,12 @@ namespace BVNetwork.NotFound.Controllers
             {
                 siteId = DataHandler.GetCurrentSiteId();
             }
-
-
+            
             // add redirect to dds with state "deleted"
             var redirect = new CustomRedirect
             {
                 OldUrl = oldUrl,
+                SiteId = siteId,
                 State = Convert.ToInt32(DataStoreHandler.State.Deleted)
             };
             DataStoreHandler dsHandler = new DataStoreHandler();

@@ -42,8 +42,13 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
         public void SaveCustomRedirects(CustomRedirectCollection redirects)
         {
             DataStoreHandler dynamicHandler = new DataStoreHandler();
+            var siteId = DataHandler.GetCurrentSiteId();
             foreach (CustomRedirect redirect in redirects)
             {
+                if (redirect.SiteId <= 0)
+                {
+                    redirect.SiteId = siteId;
+                }
                 // Add redirect 
                 dynamicHandler.SaveCustomRedirect(redirect);
             }
@@ -72,20 +77,20 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
         {
             get
             {
-                //Logger.Debug("Begin: Get Current CustomRedirectHandler");
-                //// First check if there is a cached version of
-                //// this object
-                //var handler = GetHandlerFromCache();
-                //if (handler != null)
-                //{
-                //    Logger.Debug("Returning cached handler.");
-                //    Logger.Debug("End: Get Current CustomRedirectHandler");
-                //    // Got the cached version, return it
-                //    return handler;
-                //}
+                Logger.Debug("Begin: Get Current CustomRedirectHandler");
+                // First check if there is a cached version of
+                // this object
+                var handler = GetHandlerFromCache();
+                if (handler != null)
+                {
+                    Logger.Debug("Returning cached handler.");
+                    Logger.Debug("End: Get Current CustomRedirectHandler");
+                    // Got the cached version, return it
+                    return handler;
+                }
 
                 // Not cached, we need to create it
-                var handler = new CustomRedirectHandler();
+                handler = new CustomRedirectHandler();
                 // Load redirects with standard settings
                 Logger.Debug("Begin: Load custom redirects from dynamic data store");
                 try
@@ -123,7 +128,13 @@ namespace BVNetwork.NotFound.Core.CustomRedirects
         /// <returns>An instanciated CustomRedirectHandler if found in the cache, null if not found</returns>
         private static CustomRedirectHandler GetHandlerFromCache()
         {
-            var handler = EPiServer.CacheManager.Get(CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE) as CustomRedirectHandler;
+            CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE = string.Format("BvnCustomMultiSiteRedirectHandler_{0}", DataHandler.GetCurrentSiteId());
+            var cachehandler = EPiServer.CacheManager.Get(CACHE_KEY_CUSTOM_REDIRECT_HANDLER_INSTANCE);
+            if (cachehandler == null)
+            {
+                return null;
+            }
+            var handler = cachehandler as CustomRedirectHandler;
             return handler;
         }
 

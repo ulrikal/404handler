@@ -112,17 +112,10 @@ namespace BVNetwork.NotFound.Core.Data
 
         public DataSet FindSiteIdByHost(string hostName)
         {
-            //string sqlCommand = "SELECT [pkId] FROM [dbo].[tblSiteDefinition] WHERE [SiteUrl] = @hostName OR [SiteUrl] = @safehostName";
             string sqlCommand = "SELECT [fkSiteID] FROM [dbo].[tblHostDefinition] WHERE [Name] = @hostName";
             var hostNameParam = CreateParameter("hostName", DbType.String, 100);
             hostNameParam.Value = hostName;
-            //hostNameParam.Value = "http://" + hostName + "/";
-
-            //var safehostNameParam = CreateParameter("safehostName", DbType.String, 100);
-            //safehostNameParam.Value = "https://" + hostName + "/";
-
             var parameters = new List<IDbDataParameter> { hostNameParam };
-            //var parameters = new List<IDbDataParameter> { hostNameParam, safehostNameParam };
             var result = ExecuteSQL(sqlCommand, parameters);
             return result;
 

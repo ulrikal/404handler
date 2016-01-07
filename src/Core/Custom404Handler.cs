@@ -261,7 +261,7 @@ namespace BVNetwork.NotFound.Core
             bool localHost = false;
             try
             {
-                System.Net.IPAddress address = System.Net.IPAddress.Parse(HttpContext.Current.Request.UserHostAddress);
+                IPAddress address = IPAddress.Parse(HttpContext.Current.Request.UserHostAddress);
                 Debug.WriteLine("IP Address of user: " + address, "404Handler");
 
                 IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());

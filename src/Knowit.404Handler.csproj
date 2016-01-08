@@ -12,7 +12,7 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>BVNetwork.EPi404</AssemblyName>
+    <AssemblyName>Knowit.EPi404</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -20,7 +20,7 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>BVNetwork.NotFound</RootNamespace>
+    <RootNamespace>Knowit.NotFound</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -144,8 +144,8 @@
     <None Include="Views\NotFoundMultiSiteRedirect\Suggestions.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </None>
-    <Compile Include="Configuration\Bvn404HandlerConfiguration.csd.cs">
-      <Link>Bvn\FileNotFound\Configuration\Bvn404HandlerConfiguration.csd.cs</Link>
+    <Compile Include="Bvn\FileNotFound\Configuration\Bvn404HandlerConfiguration.csd.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -186,7 +186,7 @@
     <Compile Include="Core\NotFoundPage\NotFoundBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Content Include="BVNetwork.404Handler.nuspec">
+    <Content Include="Knowit.404Handler.nuspec">
       <SubType>Designer</SubType>
     </Content>
     <None Include="CustomRedirects.config" />
@@ -322,9 +322,7 @@
     </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Bvn\FileNotFound\Configuration\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

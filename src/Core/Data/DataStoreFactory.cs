@@ -1,7 +1,7 @@
 ﻿using System;
 using EPiServer.Shell.Composition;
 
-namespace BVNetwork.NotFound.Core.Data
+namespace Knowit.NotFound.Core.Data
 {
     public static class DataStoreFactory
     {

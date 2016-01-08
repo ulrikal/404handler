@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using BVNetwork.NotFound.Core.CustomRedirects;
-using BVNetwork.NotFound.Core.Data;
-
 using EPiServer.Logging;
+using Knowit.NotFound.Core.Data;
+using Knowit.NotFound.Core.Obsolete;
 
-namespace BVNetwork.NotFound.Core.Upgrade
+namespace Knowit.NotFound.Core.Upgrade
 {
     public static class Upgrader
     {
@@ -55,7 +54,7 @@ namespace BVNetwork.NotFound.Core.Upgrade
             if (create)
             {
                 _log.Information("Create 404 handler version SP START");
-                string versionSP = @"CREATE PROCEDURE [dbo].[bvn_notfoundversion] AS RETURN " + Configuration.Configuration.CURRENT_VERSION;
+                string versionSP = @"CREATE PROCEDURE [dbo].[bvn_notfoundmultisiteversion] AS RETURN " + Configuration.Configuration.CURRENT_VERSION;
 
                 if (!dba.ExecuteNonQuery(versionSP))
                 {
@@ -88,19 +87,19 @@ namespace BVNetwork.NotFound.Core.Upgrade
             {
                 // the old redirect class is obsolete, and should only be used for this upgrade
 #pragma warning disable 618
-                var oldCustomrRedirectStore = DataStoreFactory.GetStore(typeof(FileNotFound.CustomRedirects.CustomRedirect));
+                var oldCustomrRedirectStore = DataStoreFactory.GetStore(typeof(CustomRedirect));
 #pragma warning restore 618
 #pragma warning disable CS0618 // Type or member is obsolete
-                var oldCustomRedirects = oldCustomrRedirectStore.Items<FileNotFound.CustomRedirects.CustomRedirect>().ToList();
+                var oldCustomRedirects = oldCustomrRedirectStore.Items<CustomRedirect>().ToList();
 #pragma warning restore CS0618 // Type or member is obsolete
 
                 if (oldCustomRedirects.Count > 0)
                 {
-                    var newCustomrRedirectStore = DataStoreFactory.GetStore(typeof(CustomRedirect));
+                    var newCustomrRedirectStore = DataStoreFactory.GetStore(typeof(CustomRedirects.CustomRedirect));
                     DataStoreHandler dsHandler = new DataStoreHandler();
                     foreach (var oldCustomRedirect in oldCustomRedirects)
                     {
-                        var newRedirect = new CustomRedirect(oldCustomRedirect.OldUrl, oldCustomRedirect.NewUrl, oldCustomRedirect.WildCardSkipAppend, oldCustomRedirect.SiteId);
+                        var newRedirect = new CustomRedirects.CustomRedirect(oldCustomRedirect.OldUrl, oldCustomRedirect.NewUrl, oldCustomRedirect.WildCardSkipAppend, oldCustomRedirect.SiteId);
                         dsHandler.SaveCustomRedirect(newRedirect);
                     }
                 }
@@ -131,7 +130,7 @@ namespace BVNetwork.NotFound.Core.Upgrade
             }
             if (Valid)
             {
-                string versionSP = @"ALTER PROCEDURE [dbo].[bvn_notfoundversion] AS RETURN " + Configuration.Configuration.CURRENT_VERSION;
+                string versionSP = @"ALTER PROCEDURE [dbo].[bvn_notfoundmultisiteversion] AS RETURN " + Configuration.Configuration.CURRENT_VERSION;
                 Valid = dba.ExecuteNonQuery(versionSP);
                 // TODO: Alter table if necessary
             }

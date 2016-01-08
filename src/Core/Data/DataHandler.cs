@@ -1,35 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Web;
+using EPiServer.Logging;
 using EPiServer.Web;
 
-namespace BVNetwork.NotFound.Core.Data
+namespace Knowit.NotFound.Core.Data
 {
-    public class DataHandler
+    public static class DataHandler
     {
         public static string UknownReferer = "Uknown referers";
+        private static ILogger _logger = LogManager.GetLogger();
 
         public static Dictionary<string, int> GetRedirects(int siteId)
         {
             var keyCounts = new Dictionary<string, int>();
-            new List<string>();
             DataAccessBaseEx dabe = DataAccessBaseEx.GetWorker();
             var allkeys = dabe.GetAllClientRequestCount(siteId);
 
-            string oldUrl;
             foreach (DataTable table in allkeys.Tables)
             {
                 foreach (DataRow row in table.Rows)
                 {
-                    oldUrl = row[0].ToString();
-
-
+                    var oldUrl = row[0].ToString();
                     keyCounts.Add(oldUrl, Convert.ToInt32(row[1]));
                 }
             }
-
             return keyCounts;
-
         }
 
         public static Dictionary<string, int> GetReferers(string url, int siteId)
@@ -43,7 +41,7 @@ namespace BVNetwork.NotFound.Core.Data
                 int unknownReferers = 0;
                 for (int i = 0; i < referersDs.Tables[0].Rows.Count; i++)
                 {
-                   
+
                     var referer = referersDs.Tables[0].Rows[i][0].ToString();
                     int count = Convert.ToInt32(referersDs.Tables[0].Rows[i][1].ToString());
                     if (referer.Trim() != string.Empty && !referer.Contains("(null)"))
@@ -54,7 +52,7 @@ namespace BVNetwork.NotFound.Core.Data
                     }
                     else
                         unknownReferers += count;
-                    
+
 
                 }
                 if (unknownReferers > 0)
@@ -81,10 +79,10 @@ namespace BVNetwork.NotFound.Core.Data
             string urlHost = urlHostArray[0];
             if (urlHostArray.Length > 2)
             {
-               urlHost = (string)urlHostArray.GetValue(urlHostArray.Length - 2);
+                urlHost = (string)urlHostArray.GetValue(urlHostArray.Length - 2);
             }
-           
-            
+
+
 
             var dataAccess = DataAccessBaseEx.GetWorker();
             var hostDataSet = dataAccess.FindSiteIdByHost(urlHost);
@@ -110,28 +108,34 @@ namespace BVNetwork.NotFound.Core.Data
             {
                 if (table.Rows.Count > 0)
                 {
-                    foreach (DataRow row in table.Rows)
-                    {
-                        siteIds.Add(Convert.ToInt32(row[0]));
-                    }
+                    siteIds.AddRange(from DataRow row in table.Rows select Convert.ToInt32(row[0]));
                 }
-                
+
             }
             return siteIds;
         }
 
         public static int GetCurrentSiteId()
         {
-            var dataAccess = DataAccessBaseEx.GetWorker();
-            var hostDataSet = dataAccess.FindSiteIdByHost(SiteDefinition.Current.SiteUrl.Host);
-            foreach (DataTable table in hostDataSet.Tables)
+            try
             {
-                if (table.Rows.Count > 0)
+                var dataAccess = DataAccessBaseEx.GetWorker();
+                var hostDataSet = dataAccess.FindSiteIdByHost(SiteDefinition.Current.SiteUrl.Host);
+                foreach (DataTable table in hostDataSet.Tables)
                 {
-                    var row = table.Rows[0];
-                    return Convert.ToInt32(row[0]);
+                    if (table.Rows.Count > 0)
+                    {
+                        var row = table.Rows[0];
+                        return Convert.ToInt32(row[0]);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                _logger.Error("fel vid GetCurrentSiteId: {0}", ex);
+                return 1;
+            }
+            
             return -1;
 
         }

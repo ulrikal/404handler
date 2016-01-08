@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BVNetwork.NotFound.Core.CustomRedirects;
 using EPiServer.Data.Dynamic;
+using Knowit.NotFound.Core.CustomRedirects;
 
-namespace BVNetwork.NotFound.Core.Data
+namespace Knowit.NotFound.Core.Data
 {
     public class DataStoreHandler
     {

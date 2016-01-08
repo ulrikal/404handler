@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Dictionary<string,int>>" %>
-<%@ Import Namespace="BVNetwork.NotFound.RedirectGadget" %>
+<%@ Import Namespace="Knowit.NotFound.RedirectGadget" %>
 <%@ Import Namespace="EPiServer.Core" %>
 <%@ Import Namespace="EPiServer.Shell.Web.Mvc.Html" %>
 <div class="notfound">

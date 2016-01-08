@@ -9,7 +9,7 @@ using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using EPiServer.Web.Routing.Segments;
 
-namespace BVNetwork.NotFound.Core.NotFoundPage
+namespace Knowit.NotFound.Core.NotFoundPage
 {
     public static class NotFoundPageUtil
     {

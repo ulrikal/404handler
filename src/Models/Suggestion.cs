@@ -1,6 +1,6 @@
-﻿using BVNetwork.NotFound.Core.CustomRedirects;
+﻿using Knowit.NotFound.Core.CustomRedirects;
 
-namespace BVNetwork.NotFound.Models
+namespace Knowit.NotFound.Models
 {
     public class Suggestion
     {

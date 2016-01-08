@@ -13,7 +13,7 @@ Until we've moved the documentation over, please check out the existing (somewha
 # Custom Handlers
 If you need more advanced or custom logic to create redirects, you can implement an INotFoundHandler.
 
-1. Create a class that implements `BVNetwork.NotFound.Core.INotFoundHandler`
+1. Create a class that implements `Knowit.NotFound.Core.INotFoundHandler`
 2. In the `public string RewriteUrl(string url)` method, add your custom logic
 3. Register the handler in web.config:
 ```xml

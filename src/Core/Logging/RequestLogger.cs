@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using BVNetwork.NotFound.Core.Data;
 using EPiServer.Logging;
+using Knowit.NotFound.Core.Data;
 
-namespace BVNetwork.NotFound.Core.Logging
+namespace Knowit.NotFound.Core.Logging
 {
     public class RequestLogger
     {

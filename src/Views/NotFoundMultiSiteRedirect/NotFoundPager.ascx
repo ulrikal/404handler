@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BVNetwork.NotFound.Models.RedirectIndexViewData>" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Knowit.NotFound.Models.RedirectIndexViewData>" %>
 <%@ Import Namespace="EPiServer.Cms.Shell" %>
 <%@ Import Namespace="EPiServer.Shell.Web.Mvc.Html" %>
 <div class="pagerwrapper">

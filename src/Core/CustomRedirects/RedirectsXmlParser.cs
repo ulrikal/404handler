@@ -2,7 +2,7 @@ using System.IO;
 using System.Xml;
 using EPiServer.Logging;
 
-namespace BVNetwork.NotFound.Core.CustomRedirects
+namespace Knowit.NotFound.Core.CustomRedirects
 {
     /// <summary>
     /// Class for reading and writing to the custom redirects file

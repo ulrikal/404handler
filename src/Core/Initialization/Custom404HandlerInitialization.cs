@@ -1,13 +1,12 @@
-using System.Reflection;
 using System.Web;
-using BVNetwork.NotFound.Core.CustomRedirects;
-using BVNetwork.NotFound.Core.Data;
-using BVNetwork.NotFound.Core.Upgrade;
 using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
 using EPiServer.Logging;
+using Knowit.NotFound.Core.CustomRedirects;
+using Knowit.NotFound.Core.Data;
+using Knowit.NotFound.Core.Upgrade;
 
-namespace BVNetwork.NotFound.Core.Initialization
+namespace Knowit.NotFound.Core.Initialization
 {
     /// <summary>
     /// Global File Not Found Handler, for handling Asp.net exceptions

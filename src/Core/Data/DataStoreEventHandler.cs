@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading;
-using BVNetwork.NotFound.Core.CustomRedirects;
 using EPiServer.Events;
 using EPiServer.Events.Clients;
 using EPiServer.Logging;
 using EPiServer.PlugIn;
+using Knowit.NotFound.Core.CustomRedirects;
 
-namespace BVNetwork.NotFound.Core.Data
+namespace Knowit.NotFound.Core.Data
 {
 
     public class DataStoreEventHandlerHook : PlugInAttribute

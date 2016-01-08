@@ -2,7 +2,7 @@ using System;
 using System.Web;
 using EPiServer.Web;
 
-namespace BVNetwork.NotFound.Core.NotFoundPage
+namespace Knowit.NotFound.Core.NotFoundPage
 {
     public class SimplePageNotFoundBase : EPiServer.SimplePage
     {

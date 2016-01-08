@@ -1,7 +1,8 @@
-﻿using EPiServer.Data.Dynamic;
+﻿using System;
 using EPiServer.Data;
-using System;
-namespace BVNetwork.FileNotFound.CustomRedirects
+using EPiServer.Data.Dynamic;
+
+namespace Knowit.NotFound.Core.Obsolete
 {
     /// <summary>
     /// Information about one custom redirect.

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
 	<configSections>
-    <section name="bvn404Handler" type="BVNetwork.NotFound.Configuration.Bvn404HandlerConfiguration, BVNetwork.EPi404"
+    <section name="bvn404Handler" type="Knowit.NotFound.Bvn.FileNotFound.Configuration.Bvn404HandlerConfiguration, Knowit.EPi404"
              xdt:Locator="Match(name)" xdt:Transform="InsertIfMissing"/>
 	</configSections>
   <bvn404Handler handlerMode="On" fileNotFoundPage="/notfound.aspx" xdt:Transform="InsertIfMissing">

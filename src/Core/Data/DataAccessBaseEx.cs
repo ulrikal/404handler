@@ -8,7 +8,7 @@ using EPiServer.DataAccess;
 using EPiServer.Logging;
 using EPiServer.ServiceLocation;
 
-namespace BVNetwork.NotFound.Core.Data
+namespace Knowit.NotFound.Core.Data
 {
     public class DataAccessBaseEx : DataAccessBase
     {
@@ -210,7 +210,7 @@ namespace BVNetwork.NotFound.Core.Data
             return Database.Execute(() =>
     {
 
-        string sqlCommand = "dbo.bvn_notfoundversion";
+        string sqlCommand = "dbo.bvn_notfoundmultisiteversion";
         int version = -1;
         try
         {

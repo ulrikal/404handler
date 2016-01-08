@@ -1,9 +1,9 @@
 using System;
-using BVNetwork.NotFound.Core.Data;
-using BVNetwork.NotFound.Core.Upgrade;
 using EPiServer.Logging;
+using Knowit.NotFound.Core.Data;
+using Knowit.NotFound.Core.Upgrade;
 
-namespace BVNetwork.NotFound.Core.CustomRedirects
+namespace Knowit.NotFound.Core.CustomRedirects
 {
     /// <summary>
     /// Handler for custom redirects. Loads and caches the list of custom redirects

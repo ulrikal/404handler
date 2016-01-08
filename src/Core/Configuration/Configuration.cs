@@ -1,8 +1,8 @@
 using System;
 using System.Configuration;
-using BVNetwork.NotFound.Configuration;
+using Knowit.NotFound.Bvn.FileNotFound.Configuration;
 
-namespace BVNetwork.NotFound.Core.Configuration
+namespace Knowit.NotFound.Core.Configuration
 {
     public enum FileNotFoundMode
     {

@@ -1,4 +1,4 @@
-﻿namespace BVNetwork.NotFound.Core
+﻿namespace Knowit.NotFound.Core
 {
     public class ColorHelper
     {

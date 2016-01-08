@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BVNetwork.NotFound.Models.RedirectIndexViewData>" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Knowit.NotFound.Models.RedirectIndexViewData>" %>
 <div class="notfound">
     <%
         if(Model.IsSuggestions)

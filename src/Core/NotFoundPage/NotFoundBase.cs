@@ -1,8 +1,7 @@
 using System;
 using System.Web;
-using EPiServer.Logging;
 
-namespace BVNetwork.NotFound.Core.NotFoundPage
+namespace Knowit.NotFound.Core.NotFoundPage
 {
     public class NotFoundBase : System.Web.UI.Page
     {

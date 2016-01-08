@@ -1,7 +1,6 @@
 ﻿using System;
-using BVNetwork.NotFound.Core.Data;
 
-namespace BVNetwork.NotFound.Core.Logging
+namespace Knowit.NotFound.Core.Logging
 {
     public class LogEvent
     {

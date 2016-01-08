@@ -4,16 +4,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Web;
-using EPiServer.Logging;
-using BVNetwork.NotFound.Core.Configuration;
-using BVNetwork.NotFound.Core.CustomRedirects;
-using BVNetwork.NotFound.Core.Data;
-using BVNetwork.NotFound.Core.Logging;
 using EPiServer.Core;
+using EPiServer.Logging;
 using EPiServer.Web;
+using Knowit.NotFound.Core.Configuration;
+using Knowit.NotFound.Core.CustomRedirects;
+using Knowit.NotFound.Core.Data;
+using Knowit.NotFound.Core.Logging;
 using IPAddress = System.Net.IPAddress;
 
-namespace BVNetwork.NotFound.Core
+namespace Knowit.NotFound.Core
 {
     public class Custom404Handler
     {

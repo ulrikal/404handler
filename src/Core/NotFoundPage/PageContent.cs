@@ -1,4 +1,4 @@
-namespace BVNetwork.NotFound.Core.NotFoundPage
+namespace Knowit.NotFound.Core.NotFoundPage
 {
 	/// <summary>
 	/// Summary description for PageContent.
@@ -27,18 +27,18 @@ namespace BVNetwork.NotFound.Core.NotFoundPage
 		/// </summary>
 		private void InitializeFromLanguageFile()
 		{
-		    var languageService = EPiServer.Framework.Localization.LocalizationService.Current;
-             
-            var cultureInfo = EPiServer.Globalization.ContentLanguage.PreferredCulture;
+			var languageService = EPiServer.Framework.Localization.LocalizationService.Current;
+			 
+			var cultureInfo = EPiServer.Globalization.ContentLanguage.PreferredCulture;
 
-		    if (cultureInfo != null)
-		    {
-		        languageService.TryGetStringByCulture("/templates/notfound/title1", cultureInfo, out _title);
-		        languageService.TryGetStringByCulture("/templates/notfound/toptext", cultureInfo, out _topText);
-		        languageService.TryGetStringByCulture("/templates/notfound/lookingfor", cultureInfo, out _lookingFor);
-		        languageService.TryGetStringByCulture("/templates/notfound/referer", cultureInfo, out _cameFrom);
-		        languageService.TryGetStringByCulture("/templates/notfound/bottomtext", cultureInfo, out _bottomText);
-		    }
+			if (cultureInfo != null)
+			{
+				languageService.TryGetStringByCulture("/templates/notfound/title1", cultureInfo, out _title);
+				languageService.TryGetStringByCulture("/templates/notfound/toptext", cultureInfo, out _topText);
+				languageService.TryGetStringByCulture("/templates/notfound/lookingfor", cultureInfo, out _lookingFor);
+				languageService.TryGetStringByCulture("/templates/notfound/referer", cultureInfo, out _cameFrom);
+				languageService.TryGetStringByCulture("/templates/notfound/bottomtext", cultureInfo, out _bottomText);
+			}
 		}
 
 		/// <summary>

@@ -1,9 +1,9 @@
-<%@ Page Language="c#" AutoEventWireup="false" Inherits="BVNetwork.NotFound.Core.NotFoundPage.NotFoundBase" %>
+<%@ Page Language="c#" AutoEventWireup="false" Inherits="Knowit.NotFound.Core.NotFoundPage.NotFoundBase" %>
 
 <%-- 
     Note! This file has no code-behind. It inherits from the NotFoundBase class. You can 
     make a copy of this file into your own project, change the design and keep the inheritance 
-    WITHOUT having to reference the BVNetwork.EPi404.dll assembly.
+    WITHOUT having to reference the Knowit.EPi404.dll assembly.
     
     If you want to use your own Master Page, inherit from SimplePageNotFoundBase instead of
     NotFoundBase, as that will bring in what is needed by EPiServer. Note! you do not need to
@@ -19,7 +19,7 @@
     could not find in the query string.
     
     Available properties:
-        Content (BVNetwork.FileNotFound.Content.PageContent)
+        Content (Knowit.FileNotFound.Content.PageContent)
             // Labels you can use - fetched from the language file
             Content.BottomText
             Content.CameFrom

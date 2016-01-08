@@ -1,10 +1,9 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BVNetwork.NotFound.Models.RedirectIndexViewData>" %>
-
-<%@ Import Namespace="BVNetwork.NotFound.Core" %>
-<%@ Import Namespace="BVNetwork.NotFound.Core.CustomRedirects" %>
-<%@ Import Namespace="BVNetwork.NotFound.Core.Data" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Knowit.NotFound.Models.RedirectIndexViewData>" %>
 <%@ Import Namespace="EPiServer.Core" %>
 <%@ Import Namespace="EPiServer.Shell.Web.Mvc.Html" %>
+<%@ Import Namespace="Knowit.NotFound.Core" %>
+<%@ Import Namespace="Knowit.NotFound.Core.CustomRedirects" %>
+<%@ Import Namespace="Knowit.NotFound.Core.Data" %>
 <script type="text/javascript">
 
     function replaceArrow(inputid) {

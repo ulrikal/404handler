@@ -1,11 +1,11 @@
-using BVNetwork.NotFound.Core.Data;
 using EPiServer.Data;
 using EPiServer.Data.Dynamic;
+using Knowit.NotFound.Core.Data;
 
-namespace BVNetwork.NotFound.Core.CustomRedirects 
+namespace Knowit.NotFound.Core.CustomRedirects 
 {
 
-	[EPiServerDataStore(AutomaticallyCreateStore = true, AutomaticallyRemapStore = false)]
+	[EPiServerDataStore(AutomaticallyCreateStore = true, AutomaticallyRemapStore = true)]
 	public class CustomRedirect : IDynamicData
 	{
 

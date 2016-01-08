@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Web;
-using BVNetwork.NotFound.Configuration;
-using BVNetwork.NotFound.Core.Data;
+using Knowit.NotFound.Bvn.FileNotFound.Configuration;
+using Knowit.NotFound.Core.Data;
 
-namespace BVNetwork.NotFound.Core.CustomRedirects
+namespace Knowit.NotFound.Core.CustomRedirects
 {
     /// <summary>
     /// A collection of custom urls

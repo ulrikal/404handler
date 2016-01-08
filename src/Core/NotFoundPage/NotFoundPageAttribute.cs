@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using EPiServer.Editor;
 using EPiServer.Logging;
 
-namespace BVNetwork.NotFound.Core.NotFoundPage
+namespace Knowit.NotFound.Core.NotFoundPage
 {
     public class NotFoundPageAttribute : ActionFilterAttribute
     {

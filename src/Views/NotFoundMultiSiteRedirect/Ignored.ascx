@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<List<CustomRedirect>>" %>
-<%@ Import Namespace="BVNetwork.NotFound.Core.CustomRedirects" %>
 <%@ Import Namespace="EPiServer.Core" %>
+<%@ Import Namespace="Knowit.NotFound.Core.CustomRedirects" %>
 
 <div class="notfound">
        <div class="epi-formArea">

@@ -5,17 +5,17 @@ using System.Reflection;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("BV Network 404 Handler")]
-[assembly: AssemblyDescription("Custom 404 Handler for EPiServer with custom redirects.")]
+[assembly: AssemblyTitle("Knowit 404 Handler")]
+[assembly: AssemblyDescription("Custom 404 Handler based on BV Network 404 Handler for EPiServer with custom redirects.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("BV Network AS")]
+[assembly: AssemblyCompany("Knowit Reaktor Stockholm AB")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("BV Network AS 2010")]
+[assembly: AssemblyCopyright("Knowit Reaktor Stockholm AB 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		 
 
 
-[assembly: AssemblyVersion("4.1.5")]
+[assembly: AssemblyVersion("4.1.6")]
 
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]

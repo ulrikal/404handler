@@ -260,7 +260,7 @@ namespace Knowit.NotFound.Controllers
                 siteId = DataHandler.GetCurrentSiteId();
             }
             DataStoreHandler dsHandler = new DataStoreHandler();
-            dsHandler.DeleteCustomRedirect(url, siteId);
+            dsHandler.UnignoreRedirect(url, siteId);
             return Ignored(siteId);
         }
 

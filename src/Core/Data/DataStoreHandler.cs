@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using EPiServer.Data.Dynamic;
+using Knowit.NotFound.Core.Configuration;
 using Knowit.NotFound.Core.CustomRedirects;
+using Knowit.NotFound.Core.Logging;
 
 namespace Knowit.NotFound.Core.Data
 {
@@ -86,9 +89,33 @@ namespace Knowit.NotFound.Core.Data
 
         }
 
-        public void UnignoreRedirect()
+        public void UnignoreRedirect(string oldUrl, int siteId)
         {
-            // TODO
+            // Get hold of the datastore
+            DynamicDataStore store = DataStoreFactory.GetStore(typeof(CustomRedirect));
+
+            //find object with matching property "OldUrl"
+            var urlEncode = HttpUtility.UrlEncode(oldUrl);
+            if (urlEncode != null)
+            {
+                var savedUrl = urlEncode.ToLower().Replace("%2f", "/");
+                var filters = new Dictionary<string, object>
+                {
+                    {OldUrlPropertyName, savedUrl.ToLower()},
+                    {SiteIdPropertyName, siteId}
+                };
+                CustomRedirect match = store.Find<CustomRedirect>(filters).SingleOrDefault();
+                if (match != null)
+                {
+                    // log request to database - if logging is turned on.
+                    if (Configuration.Configuration.Logging == LoggerMode.On)
+                    {
+                        store.Delete(match);
+                        // Safe logging
+                        RequestLogger.Instance.LogRequest(savedUrl, string.Empty, siteId);
+                    }
+                }
+            }
         }
 
 
@@ -96,21 +123,26 @@ namespace Knowit.NotFound.Core.Data
         /// Delete CustomObject object from Data Store that has given "OldUrl" property
         /// </summary>
         /// <param name="oldUrl"></param>
+        /// <param name="siteId"></param>
         public void DeleteCustomRedirect(string oldUrl, int siteId)
         {
             // Get hold of the datastore
             DynamicDataStore store = DataStoreFactory.GetStore(typeof(CustomRedirect));
 
             //find object with matching property "OldUrl"
-            // CustomRedirect match = store.Find<CustomRedirect>(OldUrlPropertyName, oldUrl.ToLower()).SingleOrDefault();
-            var filters = new Dictionary<string, object>
+            var urlEncode = HttpUtility.UrlEncode(oldUrl);
+            if (urlEncode != null)
             {
-                {OldUrlPropertyName, oldUrl.ToLower()},
-                {SiteIdPropertyName, siteId}
-            };
-            CustomRedirect match = store.Find<CustomRedirect>(filters).SingleOrDefault();
-            if (match != null)
-                store.Delete(match);
+                var savedUrl = urlEncode.ToLower().Replace("%2f", "/");
+                var filters = new Dictionary<string, object>
+                {
+                    {OldUrlPropertyName, savedUrl.ToLower()},
+                    {SiteIdPropertyName, siteId}
+                };
+                CustomRedirect match = store.Find<CustomRedirect>(filters).SingleOrDefault();
+                if (match != null)
+                    store.Delete(match);
+            }
         }
 
         /// <summary>

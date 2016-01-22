@@ -36,7 +36,7 @@
         %>
         <tr>
             <td class="longer">
-                <span><a style="color: #398AC9; cursor: pointer" href="<%= Html.Encode(referer.Key)%>">
+                <span><a style="color: #398AC9; cursor: pointer" href="<%= Html.Encode(referer.Key)%>" target="_blank">
                     <%= Html.Encode(referer.Key)%></a><%= string.Format("<i> ({0} errors)</i>", referer.Value)%></span>
             </td>
         </tr>

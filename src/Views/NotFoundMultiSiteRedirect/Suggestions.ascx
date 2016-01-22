@@ -99,7 +99,7 @@
                         <li>
                             <%if (referer.Key != DataHandler.UknownReferer)
                               {  %>
-                            <a style="color: #398AC9; cursor: pointer" href="<%=referer.Key %>">
+                            <a style="color: #398AC9; cursor: pointer" href="<%=referer.Key %>" target="_blank">
                                 <%=referer.Key%></a> (<%=referer.Value%>)
                                             <%}
                               else

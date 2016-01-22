@@ -20,6 +20,7 @@ namespace Knowit.NotFound.Core.Data
         };
 
         private const string OldUrlPropertyName = "OldUrl";
+        private const string NewUrlPropertyName = "NewUrl";
         private const string SiteIdPropertyName = "SiteId";
         public void SaveCustomRedirect(CustomRedirect currentCustomRedirect)
         {
@@ -32,6 +33,18 @@ namespace Knowit.NotFound.Core.Data
                 {SiteIdPropertyName, currentCustomRedirect.SiteId}
             };
             CustomRedirect match = store.Find<CustomRedirect>(filter).SingleOrDefault();
+
+            if (match == null)
+            {
+                //check if there is an exisiting object with "NewUrl" set to this property "OldUrl", and change that one instead
+                filter = new Dictionary<string, object>
+                {
+                    {NewUrlPropertyName, currentCustomRedirect.OldUrl.ToLower() },
+                    {SiteIdPropertyName, currentCustomRedirect.SiteId }
+                };
+                match = store.Find<CustomRedirect>(filter).SingleOrDefault();
+            }
+
             //if there is a match, replace the value.
             if (match != null)
                 store.Save(currentCustomRedirect, match.Id);

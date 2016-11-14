@@ -53,6 +53,10 @@ namespace Knowit.NotFound.Controllers
             {
                 return Content("An error has occured in the dynamic data store: " + CustomRedirectHandler.CustomRedirectHandlerException);
             }
+            if (siteId == -1)
+            {
+                return new System.Web.Mvc.EmptyResult();
+            }
             List<CustomRedirect> customRedirectList;
             if (isSuggestions.HasValue && isSuggestions.Value)
             {

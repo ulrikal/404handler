@@ -120,6 +120,10 @@ namespace Knowit.NotFound.Core.Data
             try
             {
                 var dataAccess = DataAccessBaseEx.GetWorker();
+                if (SiteDefinition.Current.SiteUrl.Host == null)
+                {
+                    return -1;
+                }
                 var hostDataSet = dataAccess.FindSiteIdByHost(SiteDefinition.Current.SiteUrl.Host);
                 foreach (DataTable table in hostDataSet.Tables)
                 {

@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
-using Knowit.NotFound.Bvn.FileNotFound.Configuration;
+using BVNetwork.NotFound.Configuration;
+
 
 
 namespace Knowit.NotFound.Core.Configuration

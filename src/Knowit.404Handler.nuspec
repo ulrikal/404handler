@@ -3,9 +3,9 @@
     <metadata>
         <id>Knowit.404Handler</id>
         <title>404 Handler for multisite EPiServer</title>
-        <version>4.1.8</version>
+        <version>4.2.2</version>
         <authors>Knowit</authors>
-        <owners>Knowit Reaktor Stockholm AB</owners>
+        <owners>Knowit Experience Stockholm AB</owners>
         <licenseUrl>https://www.coderesort.com/p/epicode/wiki/EpicodeLicense</licenseUrl>
         <projectUrl>https://github.com/ulrikal/404handler</projectUrl>
         <iconUrl>http://www.coderesort.com/favicon.ico</iconUrl>

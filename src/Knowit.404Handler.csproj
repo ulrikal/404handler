@@ -87,9 +87,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Bvn\FileNotFound\Configuration\Bvn404HandlerConfiguration.cs" />
-    <Compile Include="Bvn\FileNotFound\Configuration\Bvn404HandlerProvider.cs" />
-    <Compile Include="Bvn\FileNotFound\Configuration\Bvn404HandlerProviders.cs" />
+    <Compile Include="Bvn\FileNotFound\Configuration\Bvn404HandlerConfiguration.csd.cs" />
     <Compile Include="Core\Initialization\Custom404HandlerInitialization.cs" />
     <Compile Include="Core\Logging\LogEvent.cs" />
     <Compile Include="Core\NotFoundPage\NotFoundPageAttribute.cs" />

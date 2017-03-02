@@ -12,10 +12,11 @@ namespace Knowit.NotFound.Core.Data
 {
     public class DataAccessBaseEx : DataAccessBase
     {
-        public DataAccessBaseEx(IDatabaseHandler handler)
+        public DataAccessBaseEx(IDatabaseExecutor handler)
             : base(handler)
         {
-            Database = handler;
+            this.Executor = handler;
+            Executor = handler;
         }
 
         public static DataAccessBaseEx GetWorker()
@@ -31,7 +32,7 @@ namespace Knowit.NotFound.Core.Data
         {
 
 
-            return Database.Execute(delegate
+            return Executor.Execute(delegate
             {
                 using (DataSet ds = new DataSet())
                 {
@@ -62,7 +63,7 @@ namespace Knowit.NotFound.Core.Data
 
         public bool ExecuteNonQuery(string sqlCommand)
         {
-            return Database.Execute(delegate
+            return Executor.Execute(delegate
             {
                 bool success = true;
 
@@ -87,7 +88,7 @@ namespace Knowit.NotFound.Core.Data
 
         public int ExecuteScalar(string sqlCommand)
         {
-            return Database.Execute(delegate
+            return Executor.Execute(delegate
             {
                 int result;
                 try
@@ -207,21 +208,17 @@ namespace Knowit.NotFound.Core.Data
         public int Check404Version()
         {
 
-            return Database.Execute(() =>
+            return Executor.Execute(() =>
     {
 
         string sqlCommand = "dbo.bvn_notfoundmultisiteversion";
         int version = -1;
         try
         {
-
-            //  base.Database.Connection.Open();
             DbCommand command = CreateCommand();
-
             command.Parameters.Add(CreateReturnParameter());
             command.CommandText = sqlCommand;
             command.CommandType = CommandType.StoredProcedure;
-            //  command.Connection = base.Database.Connection;
             command.ExecuteNonQuery();
             version = Convert.ToInt32(GetReturnValue(command).ToString());
         }
@@ -242,7 +239,7 @@ namespace Knowit.NotFound.Core.Data
 
         public void LogRequestToDb(string oldUrl, string referer, DateTime now, int siteId)
         {
-            Database.Execute(() =>
+            Executor.Execute(() =>
                {
                    string sqlCommand = string.Format("INSERT INTO {0} (" +
                                        "Requested, OldUrl, " +
@@ -269,7 +266,7 @@ namespace Knowit.NotFound.Core.Data
                        command.Parameters.Add(siteIdParam);
                        command.CommandText = sqlCommand;
                        command.CommandType = CommandType.Text;
-                       command.Connection = Database.Connection;
+                       command.Connection = Executor.DbFactory.CreateConnection();
                        command.ExecuteNonQuery();
                    }
                    catch (Exception ex)

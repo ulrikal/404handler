@@ -10,12 +10,12 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Knowit Experience Stockholm AB")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Knowit Experience Stockholm AB 2016")]
+[assembly: AssemblyCopyright("Knowit Experience Stockholm AB 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		 
 
 
-[assembly: AssemblyVersion("4.1.8")]
+[assembly: AssemblyVersion("4.1.9")]
 
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]

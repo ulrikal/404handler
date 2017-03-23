@@ -117,14 +117,12 @@ namespace Knowit.NotFound.Core.Data
 
         public static int GetCurrentSiteId()
         {
+            var host = HttpContext.Current.Request.Url.Host;
             try
             {
+                
                 var dataAccess = DataAccessBaseEx.GetWorker();
-                if (SiteDefinition.Current.SiteUrl.Host == null)
-                {
-                    return -1;
-                }
-                var hostDataSet = dataAccess.FindSiteIdByHost(SiteDefinition.Current.SiteUrl.Host);
+                var hostDataSet = dataAccess.FindSiteIdByHost(host);
                 foreach (DataTable table in hostDataSet.Tables)
                 {
                     if (table.Rows.Count > 0)
@@ -136,8 +134,8 @@ namespace Knowit.NotFound.Core.Data
             }
             catch (Exception ex)
             {
-                _logger.Error("fel vid GetCurrentSiteId: {0}", ex);
-                return 1;
+                _logger.Error(String.Format("Fel vid GetCurrentSiteId Fix: {0} Hosten var: {1}", ex, host));
+                return -1;
             }
             
             return -1;

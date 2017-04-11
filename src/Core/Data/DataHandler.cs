@@ -74,18 +74,10 @@ namespace Knowit.NotFound.Core.Data
 
         public static int GetSiteIdFromUrl(string url)
         {
-            //TODO FIXA!
-            string[] urlHostArray = url.Split('/');
-            string urlHost = urlHostArray[0];
-            if (urlHostArray.Length > 2)
-            {
-                urlHost = (string)urlHostArray.GetValue(urlHostArray.Length - 2);
-            }
-
-
+            var host = HttpContext.Current.Request.Url.Host;
 
             var dataAccess = DataAccessBaseEx.GetWorker();
-            var hostDataSet = dataAccess.FindSiteIdByHost(urlHost);
+            var hostDataSet = dataAccess.FindSiteIdByHost(host);
 
             foreach (DataTable table in hostDataSet.Tables)
             {

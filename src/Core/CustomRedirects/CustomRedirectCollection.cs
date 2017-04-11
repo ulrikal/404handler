@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Web;
-using Knowit.NotFound.Bvn.FileNotFound.Configuration;
+using BVNetwork.NotFound.Configuration;
 using Knowit.NotFound.Core.Data;
 
 namespace Knowit.NotFound.Core.CustomRedirects

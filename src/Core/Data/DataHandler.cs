@@ -74,18 +74,10 @@ namespace Knowit.NotFound.Core.Data
 
         public static int GetSiteIdFromUrl(string url)
         {
-            //TODO FIXA!
-            string[] urlHostArray = url.Split('/');
-            string urlHost = urlHostArray[0];
-            if (urlHostArray.Length > 2)
-            {
-                urlHost = (string)urlHostArray.GetValue(urlHostArray.Length - 2);
-            }
-
-
+            var host = HttpContext.Current.Request.Url.Host;
 
             var dataAccess = DataAccessBaseEx.GetWorker();
-            var hostDataSet = dataAccess.FindSiteIdByHost(urlHost);
+            var hostDataSet = dataAccess.FindSiteIdByHost(host);
 
             foreach (DataTable table in hostDataSet.Tables)
             {
@@ -117,10 +109,12 @@ namespace Knowit.NotFound.Core.Data
 
         public static int GetCurrentSiteId()
         {
+            var host = HttpContext.Current.Request.Url.Host;
             try
             {
+                
                 var dataAccess = DataAccessBaseEx.GetWorker();
-                var hostDataSet = dataAccess.FindSiteIdByHost(SiteDefinition.Current.SiteUrl.Host);
+                var hostDataSet = dataAccess.FindSiteIdByHost(host);
                 foreach (DataTable table in hostDataSet.Tables)
                 {
                     if (table.Rows.Count > 0)
@@ -132,8 +126,8 @@ namespace Knowit.NotFound.Core.Data
             }
             catch (Exception ex)
             {
-                _logger.Error("fel vid GetCurrentSiteId: {0}", ex);
-                return 1;
+                _logger.Error(String.Format("Fel vid GetCurrentSiteId Fix: {0} Hosten var: {1}", ex, host));
+                return -1;
             }
             
             return -1;
